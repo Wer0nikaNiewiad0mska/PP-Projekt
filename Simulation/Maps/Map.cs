@@ -9,7 +9,7 @@ namespace Simulation.Maps;
 public abstract class Map
 {
     private readonly Rectangle _map;
-    private readonly Dictionary<Point, List<IMappable>> _fields;
+    private readonly Dictionary<Point, List<IMappable>> _fields = new();
     public int SizeX { get; }
     public int SizeY { get; }
     protected Map(int sizeX, int sizeY)
@@ -34,25 +34,41 @@ public abstract class Map
 
     public void Remove(IMappable mappable, Point position)
     {
-        if (!_fields.ContainsKey(position)) return;
+        Console.WriteLine($"Próba usunięcia {mappable.GetType().Name} z pozycji {position}.");
 
-        if (_fields[position].Remove(mappable))
+        // Sprawdź, czy istnieją obiekty na danej pozycji
+        if (!_fields.ContainsKey(position))
         {
-            Console.WriteLine($"{mappable.GetType().Name} removed from {position}.");
+            Console.WriteLine($"Brak obiektów na pozycji {position}, nic do usunięcia.");
+            return;
         }
 
+        // Usuń konkretny obiekt z listy
+        if (_fields[position].Remove(mappable))
+        {
+            Console.WriteLine($"{mappable.GetType().Name} został usunięty z pozycji {position}.");
+        }
+        else
+        {
+            Console.WriteLine($"{mappable.GetType().Name} nie znaleziono na pozycji {position}.");
+        }
+
+        // Usuń pustą listę, jeśli brak obiektów na danej pozycji
         if (_fields[position].Count == 0)
         {
             _fields.Remove(position);
+            Console.WriteLine($"Pozycja {position} jest teraz pusta i została usunięta z mapy.");
         }
     }
 
     public List<IMappable> At(int x, int y) => At(new Point(x, y));
 
-    public List<IMappable> At(Point p)
+    public List<IMappable> At(Point position)
     {
-        if (_fields.ContainsKey(p)) { return _fields[p]; }
-        return new List<IMappable>();
+        if (_fields.ContainsKey(position))
+            return _fields[position];
+
+        return new List<IMappable>(); // Zwraca pustą listę, jeśli brak obiektów
     }
 
     public void Move(IMappable mappable, Point p, Point pn)

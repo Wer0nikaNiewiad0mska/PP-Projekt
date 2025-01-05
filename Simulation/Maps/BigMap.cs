@@ -110,8 +110,16 @@ public class BigMap : Map
 
     public bool TryGetField(Point point, out List<IMappable> mappableObjects)
     {
-        Console.WriteLine($"Sprawdzanie pozycji {point} w mapie."); // Debugowanie
-        return _fields.TryGetValue(point, out mappableObjects);
+        Console.WriteLine($"Sprawdzanie obiektów na pozycji {point}"); // Debugowanie
+        if (_fields.TryGetValue(point, out mappableObjects))
+        {
+            Console.WriteLine($"Obiekty na pozycji {point}: {string.Join(", ", mappableObjects.Select(o => o.GetType().Name))}");
+            return true;
+        }
+
+        Console.WriteLine($"Brak obiektów na pozycji {point}");
+        mappableObjects = null;
+        return false;
     }
     //dodawanie obiektów na mapę?? opcjonalne ale mozna to usunac wsm
     public void AddObject(Point point, IMappable obj)

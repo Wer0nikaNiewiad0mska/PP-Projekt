@@ -65,6 +65,10 @@ public class MapVisualizer
                     {
                         Console.Write(creatures.Count); // Liczba postaci na polu
                     }
+                    else if (bigMap.IsKey(new Point(x, y)))
+                    {
+                        Console.Write("*"); // Klucz
+                    }
                     else
                     {
                         Console.Write(" "); // Puste pole
@@ -94,5 +98,6 @@ public class MapVisualizer
         }
         Console.WriteLine($"{Box.Horizontal}{Box.BottomRight}");
         Console.WriteLine();
+
     }
 }

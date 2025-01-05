@@ -27,10 +27,11 @@ internal class Program
             // Dodajemy odblokowywane pola i klucze
             map.AddUnlockedField(new Point(2, 3), 1); // Pole wymagające klucza o ID 1
             map.AddKey(new Point(6, 6), 1);           // Klucz o ID 1
-            Console.WriteLine("Klucz został dodany na mapę."); //do sprawdzania co nie działa sobie dodałam jbc
+            Console.WriteLine("Klucz 1 został dodany na mapę na pozycję (6, 6).");
+
             map.AddUnlockedField(new Point(4, 4), 2);
             map.AddKey(new Point(2, 2), 2);
-            Console.WriteLine("Klucz został dodany na mapę."); //tutaj też do sprawdzania gdzie bląd
+            Console.WriteLine("Klucz 2 został dodany na mapę na pozycję (2, 2).");
 
             // Tworzymy wizualizację mapy
             var visualizer = new MapVisualizer(map);
@@ -45,7 +46,9 @@ internal class Program
             npc2.InitMapAndPosition(map, new Point(3, 6));
 
             // Główna pętla gry
-            Console.WriteLine("Użyj W/A/S/D do pruszenia się. Naciśnij Enter aby zakończyć.");
+            Console.WriteLine("Użyj W/A/S/D do poruszania się. Naciśnij Q aby zebrać klucz, E aby odblokować pole, lub Enter aby zakończyć.");
+            var debugMessages = new List<string>();
+
             while (true)
             {
                 try
@@ -53,13 +56,21 @@ internal class Program
                     Console.Clear();
                     visualizer.Draw();
 
+                    // Wyświetl komunikaty debugujące poniżej mapy
+                    Console.WriteLine("\n=== Komunikaty debugowania ===");
+                    foreach (var message in debugMessages)
+                    {
+                        Console.WriteLine(message);
+                    }
+                    debugMessages.Clear(); // Czyszczenie komunikatów na koniec iteracji
+
                     // Sprawdzanie NPC w pobliżu gracza
                     foreach (var npc in new[] { npc1, npc2 })
                     {
                         var dialogue = npc.CheckAndSpeak(player.Position);
                         if (!string.IsNullOrEmpty(dialogue))
                         {
-                            Console.WriteLine(dialogue);
+                            debugMessages.Add(dialogue);
                         }
                     }
 
@@ -74,15 +85,16 @@ internal class Program
 
                     if (input == ConsoleKey.Q)
                     {
-                        player.InteractKey(map); // Próba zebrania klucza
+                        debugMessages.Add("Próba zebrania klucza...");
+                        player.InteractKey(map);
                     }
                     else if (input == ConsoleKey.E)
                     {
-                        player.InteractField(map); // Próba odblokowania pola
+                        debugMessages.Add("Próba odblokowania pola...");
+                        player.InteractField(map);
                     }
                     else
                     {
-                        // Interpretacja kierunku ruchu
                         Direction? direction = input switch
                         {
                             ConsoleKey.W => Direction.Up,
@@ -94,17 +106,18 @@ internal class Program
 
                         if (direction.HasValue)
                         {
+                            debugMessages.Add($"Gracz porusza się w kierunku {direction.Value}.");
                             player.Go(direction.Value);
                         }
                         else
                         {
-                            Console.WriteLine("Proszę użyj W/A/S/D do poruszenia.");
+                            debugMessages.Add("Nieprawidłowy klawisz. Użyj W/A/S/D.");
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Pojawił się błąd podczas rozgrywki: {ex.Message}");
+                    debugMessages.Add($"Błąd: {ex.Message}");
                 }
             }
         }

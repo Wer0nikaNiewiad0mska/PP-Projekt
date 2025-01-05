@@ -98,8 +98,13 @@ public class Player : Creature
 
                 if (unlockedField.BlockedStatus && _keys.Contains(unlockedField.KeyId))
                 {
+                    // Odblokowanie pola
                     unlockedField.BlockedStatus = false;
                     Console.WriteLine($"Pole {point} zostało odblokowane!");
+
+                    // Usuń pole z listy `objectsAtPoint` (bez modyfikacji `Map.Remove`)
+                    objectsAtPoint.Remove(unlockedField);
+                    Console.WriteLine($"Pole {point} zostało usunięte z listy obiektów.");
                 }
                 else
                 {
@@ -114,35 +119,52 @@ public class Player : Creature
 
     public void InteractKey(BigMap map)
     {
-        // Znajdź wszystkie sąsiednie pola
-        var adjacentPoints = GetAdjacentPoints();
-
-        // Przeszukaj pola w poszukiwaniu klucza
-        var keyAtPosition = adjacentPoints
-            .Select(point => new { Point = point, Objects = map.TryGetField(point, out var objs) ? objs : null })
-            .Where(x => x.Objects != null)
-            .SelectMany(x => x.Objects, (x, obj) => new { x.Point, Key = obj as Key })
-            .FirstOrDefault(x => x.Key != null);
-
-        if (keyAtPosition != null && keyAtPosition.Key != null)
+        var adjacentPoints = new[]
         {
-            var key = keyAtPosition.Key;
-            Console.WriteLine($"Znaleziono klucz o ID: {key.KeyId} na pozycji {keyAtPosition.Point}");
+        new Point(Position.X, Position.Y + 1),
+        new Point(Position.X, Position.Y - 1),
+        new Point(Position.X - 1, Position.Y),
+        new Point(Position.X + 1, Position.Y)
+    };
 
-            if (_keys.Add(key.KeyId)) // Dodanie klucza do zbioru
+        foreach (var point in adjacentPoints)
+        {
+            Console.WriteLine($"Sprawdzanie pola: {point}"); // Debugowanie
+
+            if (!map.TryGetField(point, out var objectsAtPoint))
             {
-                map.Remove(key, keyAtPosition.Point); // Usunięcie klucza z mapy
-                Console.WriteLine($"Podniosłeś klucz {key.KeyId} i został on usunięty z mapy!");
+                Console.WriteLine($"Brak obiektów na pozycji {point}");
+                continue;
             }
-            else
+
+            Console.WriteLine($"Obiekty na pozycji {point}: {string.Join(", ", objectsAtPoint.Select(o => o.GetType().Name))}");
+
+            // Znajdź klucz na polu
+            var key = objectsAtPoint.OfType<Key>().FirstOrDefault();
+            if (key != null)
             {
-                Console.WriteLine($"Masz już ten klucz, nie można go podnieść ponownie.");
+                Console.WriteLine($"Znaleziono klucz o ID: {key.KeyId} na pozycji {point}");
+
+                // Dodaj klucz do zbioru gracza
+                if (_keys.Add(key.KeyId))
+                {
+                    // Usuń klucz z mapy
+                    map.Remove(key, point);
+
+                    // Usuń klucz z lokalnej listy obiektów
+                    objectsAtPoint.Remove(key);
+
+                    Console.WriteLine($"Podniosłeś klucz {key.KeyId} i został on usunięty z mapy!");
+                }
+                else
+                {
+                    Console.WriteLine($"Masz już ten klucz, nie można go podnieść ponownie.");
+                }
+                return;
             }
         }
-        else
-        {
-            Console.WriteLine("Nie znaleziono klucza w pobliżu.");
-        }
+
+        Console.WriteLine("Nie znaleziono klucza w pobliżu.");
     }
 
     // Metoda pomocnicza do uzyskania sąsiednich punktów
@@ -150,10 +172,10 @@ public class Player : Creature
     {
         return new[]
         {
-        new Point(Position.X, Position.Y + 1),
-        new Point(Position.X, Position.Y - 1),
-        new Point(Position.X - 1, Position.Y),
-        new Point(Position.X + 1, Position.Y)
-    };
+            new Point(Position.X, Position.Y + 1),
+            new Point(Position.X, Position.Y - 1),
+            new Point(Position.X - 1, Position.Y),
+            new Point(Position.X + 1, Position.Y)
+        };
     }
 }
