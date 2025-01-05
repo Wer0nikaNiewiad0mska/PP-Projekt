@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Simulation.Maps;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -40,5 +41,17 @@ public class Npc : Creature
     public string Speak()
     {
         return $"{Name}: {Dialogue}";
+    }
+    public void InitMapAndPosition(Map map, Point point)
+    {
+        if (map == null)
+            throw new ArgumentNullException(nameof(map), "Mapa nie może być pusta.");
+
+        if (!map.Exist(point))
+            throw new ArgumentOutOfRangeException(nameof(point), "Punkt nie znajduje się na mapie.");
+
+        Position = point;
+        map.Add(this, point); // Dodanie NPC do mapy
+        Console.WriteLine($"NPC {Name} został umieszczony na pozycji {point}.");
     }
 }

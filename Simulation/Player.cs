@@ -20,20 +20,21 @@ public class Player : Creature
         if (Map is not BigMap bigMap)
             throw new InvalidOperationException("Map is not set or is not a BigMap.");
 
-        // Wylicz nową pozycję na podstawie kierunku
+        // Wylicz nową pozycję
         var newPosition = bigMap.Next(Position, direction);
 
-        if (CanMoveTo(bigMap, newPosition)) // Sprawdzamy, czy ruch jest dozwolony
+        // Sprawdzenie możliwości ruchu za pomocą `CanMoveTo`
+        if (!CanMoveTo(bigMap, newPosition))
         {
-            Console.WriteLine($"Gracz porusza się na pozycję {newPosition}");
-            bigMap.Remove(this, Position); // Usuń gracza ze starej pozycji
-            Position = newPosition;
-            bigMap.Add(this, Position); // Dodaj gracza na nową pozycję
+            Console.WriteLine($"Nie można poruszyć się na pozycję {newPosition}. Ruch zablokowany.");
+            return;
         }
-        else
-        {
-            Console.WriteLine($"Nie można poruszyć się na pozycję {newPosition}");
-        }
+
+        // Ruch jest możliwy - zaktualizuj pozycję
+        Console.WriteLine($"Gracz porusza się na pozycję {newPosition}.");
+        bigMap.Remove(this, Position); // Usuń gracza ze starej pozycji
+        Position = newPosition;
+        bigMap.Add(this, Position); // Dodaj gracza na nową pozycję
     }
 
     public bool HasKey(int keyId) => _keys.Contains(keyId);
@@ -47,27 +48,42 @@ public class Player : Creature
             return false;
         }
 
-        // Sprawdzenie pól na nowej pozycji
+        // Pobierz obiekty na nowej pozycji
         if (map.TryGetField(newPosition, out var mappableObjects))
         {
             foreach (var obj in mappableObjects)
             {
-                // Pole zablokowane przez NPC
-                if (obj is Npc)
+                // Pole zajęte przez NPC
+                if (obj is Npc npc)
                 {
-                    Console.WriteLine($"Ruch zablokowany! Pole zajęte przez NPC.");
+                    Console.WriteLine($"Ruch zablokowany! Pole {newPosition} zajęte przez NPC {npc.Name}.");
                     return false;
                 }
 
-                // Pole zablokowane przez pole do odblokowania
+                // Pole zajęte przez klucz
+                if (obj is Key)
+                {
+                    Console.WriteLine($"Ruch zablokowany! Pole {newPosition} zajęte przez klucz.");
+                    return false;
+                }
+
+                // Pole zablokowane przez `UnlockedField`
                 if (obj is UnlockedField field && field.BlockedStatus)
                 {
-                    Console.WriteLine($"Pole na pozycji {newPosition} jest zablokowane - ruch niemożliwy.");
+                    Console.WriteLine($"Ruch zablokowany! Pole {newPosition} jest zablokowane (Y).");
+                    return false;
+                }
+
+                // Pole zablokowane przez `BlockedField`
+                if (obj is BlockedField)
+                {
+                    Console.WriteLine($"Ruch zablokowany! Pole {newPosition} jest zablokowane (X).");
                     return false;
                 }
             }
         }
 
+        // Jeśli pole jest wolne, ruch jest możliwy
         return true;
     }
 
