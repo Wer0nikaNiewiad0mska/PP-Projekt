@@ -14,28 +14,34 @@ public readonly struct Point
 
     public Point Next(Direction direction)
     {
-
-        return direction switch
+        switch (direction)
         {
-            Direction.Left => new Point(X - 1, Y),
-            Direction.Right => new Point(X + 1, Y),
-            Direction.Up => new Point(X, Y + 1),
-            Direction.Down => new Point(X, Y - 1),
-            _ => new Point(X, Y),
-        };
-
+            case Direction.Up:
+                return new Point(X, Y + 1);
+            case Direction.Down:
+                return new Point(X, Y - 1);
+            case Direction.Left:
+                return new Point(X - 1, Y);
+            case Direction.Right:
+                return new Point(X + 1, Y);
+        }
+        return default;
     }
 
     // obraca dany kierunek o dodatkowe 45 stopni wg ruchu wskazówek zegara
     public Point NextDiagonal(Direction direction)
     {
-        return direction switch
+        switch (direction)
         {
-            Direction.Left => new Point(X - 1, Y + 1),
-            Direction.Right => new Point(X + 1, Y - 1),
-            Direction.Up => new Point(X + 1, Y + 1),
-            Direction.Down => new Point(X - 1, Y - 1),
-            _ => new Point(X,Y),
-        };
+            case Direction.Up:
+                return new Point(X + 1, Y + 1);
+            case Direction.Down:
+                return new Point(X - 1, Y - 1);
+            case Direction.Left:
+                return new Point(X - 1, Y + 1);
+            case Direction.Right:
+                return new Point(X + 1, Y - 1);
+        }
+        return default;
     }
 }

@@ -35,9 +35,4 @@ public class Key : ObtainableItem, IMappable
         map.Add(this, point);
         Console.WriteLine($"Klucz o ID {KeyId} został umieszczony na pozycji {point}.");
     }
-
-    public override string ToString()
-    {
-        return $"Key[ID={KeyId}, Position={Position}, Symbol={Symbol}]";
-    }
 }

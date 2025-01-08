@@ -23,23 +23,6 @@ public class BigMap : Map
         return Exist(nextPoint) && !IsBlocked(nextPoint) ? nextPoint : p;
     }
 
-    public override Point NextDiagonal(Point p, Direction d)
-    {
-        var nextPoint = p.NextDiagonal(d);
-        if (!Exist(nextPoint))
-        {
-            Console.WriteLine($"Punkt {nextPoint} nie istnieje na mapie.");
-            return p;
-        }
-
-        if (IsBlocked(nextPoint))
-        {
-            Console.WriteLine($"Punkt {nextPoint} jest zablokowany.");
-            return p;
-        }
-        return Exist(nextPoint) && !IsBlocked(nextPoint) ? nextPoint : p;
-    }
-
     public void UnlockField(Point position, int keyId)
     {
         var unlockedField = At(position).OfType<UnlockedField>().FirstOrDefault();
@@ -66,12 +49,6 @@ public class BigMap : Map
     {
         if (!_fields.TryGetValue(p, out var mappableObjects)) return false;
         return mappableObjects.OfType<Key>().Any();
-    }
-
-    public bool IsNpc(Point p)
-    {
-        if (!_fields.TryGetValue(p, out var mappableObjects)) return false;
-        return mappableObjects.OfType<Npc>().Any();
     }
     public bool IsPotion(Point p)
     {
@@ -133,19 +110,8 @@ public class BigMap : Map
             return true;
         }
 
-        Console.WriteLine($"Brak obiektów na pozycji {point}");
         mappableObjects = null;
         return false;
-    }
-    //dodawanie obiektów na mapę?? opcjonalne ale mozna to usunac wsm
-    public void AddObject(Point point, IMappable obj)
-    {
-        if (!_fields.ContainsKey(point))
-        {
-            _fields[point] = new List<IMappable>();
-        }
-
-        _fields[point].Add(obj);
     }
     public void AddPotion(Point position, string effect)
     {
@@ -156,6 +122,5 @@ public class BigMap : Map
 
         var potion = new Potions(position, effect);
         _fields[position].Add(potion);
-        Console.WriteLine($"Eliksir o efekcie '{effect}' został dodany na pozycję {position}.");
     }
 }

@@ -25,8 +25,8 @@ internal class Program
             map.AddBlockedField(new Point(2, 1));
 
             //Dodajemy potki
-            map.AddPotion(new Point(5, 5), "DiagonalMovement");
-            map.AddPotion(new Point(8, 8), "DiagonalMovement");
+            map.AddPotion(new Point(5, 5), "DoubleMovement");
+            map.AddPotion(new Point(8, 8), "DoubleMovement");
 
             // Dodajemy odblokowywane pola i klucze
             map.AddUnlockedField(new Point(2, 3), 1, "1111"); // Pole wymagające klucza o ID 1 i kodu "1234"
