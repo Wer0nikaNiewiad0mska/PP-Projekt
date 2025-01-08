@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Simulation;
 
 namespace Simulation;
 
@@ -87,7 +88,7 @@ public class Player : Creature
         return true;
     }
 
-    public void InteractField(BigMap map)
+    public void InteractField(BigMap map, string accessCode)
     {
         var adjacentPoints = new[]
         {
@@ -114,13 +115,15 @@ public class Player : Creature
 
                 if (unlockedField.BlockedStatus && _keys.Contains(unlockedField.KeyId))
                 {
-                    // Odblokowanie pola
-                    unlockedField.BlockedStatus = false;
-                    Console.WriteLine($"Pole {point} zostało odblokowane!");
-
-                    // Usuń pole z listy `objectsAtPoint` (bez modyfikacji `Map.Remove`)
-                    objectsAtPoint.Remove(unlockedField);
-                    Console.WriteLine($"Pole {point} zostało usunięte z listy obiektów.");
+                    if (accessCode == unlockedField.AccessCode) // Porównanie wprowadzonego kodu z kodem pola
+                    {
+                        unlockedField.SetBlockedStatus(false);
+                        Console.WriteLine($"Pole {point} zostało odblokowane!");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Nieprawidłowy kod dostępu dla pola {point}.");
+                    }
                 }
                 else
                 {

@@ -25,11 +25,11 @@ internal class Program
             map.AddBlockedField(new Point(2, 1));
 
             // Dodajemy odblokowywane pola i klucze
-            map.AddUnlockedField(new Point(2, 3), 1); // Pole wymagające klucza o ID 1
-            map.AddKey(new Point(6, 6), 1);           // Klucz o ID 1
+            map.AddUnlockedField(new Point(2, 3), 1, "1234"); // Pole wymagające klucza o ID 1 i kodu "1234"
+            map.AddKey(new Point(6, 6), 1);
             Console.WriteLine("Klucz 1 został dodany na mapę na pozycję (6, 6).");
 
-            map.AddUnlockedField(new Point(4, 4), 2);
+            map.AddUnlockedField(new Point(4, 4), 2, "5678"); // Pole wymagające klucza o ID 2 i kodu "5678"
             map.AddKey(new Point(2, 2), 2);
             Console.WriteLine("Klucz 2 został dodany na mapę na pozycję (2, 2).");
 
@@ -91,7 +91,9 @@ internal class Program
                     else if (input == ConsoleKey.E)
                     {
                         debugMessages.Add("Próba odblokowania pola...");
-                        player.InteractField(map);
+                        Console.WriteLine("Wprowadź kod odblokowujący pole:");
+                        string accessCode = Console.ReadLine();
+                        player.InteractField(map, accessCode);
                     }
                     else
                     {

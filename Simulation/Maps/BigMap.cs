@@ -37,7 +37,7 @@ public class BigMap : Map
             Console.WriteLine($"Próba odblokowania pola na pozycji {position} przy użyciu klucza {keyId}");
             if (unlockedField.KeyId == keyId && unlockedField.BlockedStatus)
             {
-                unlockedField.BlockedStatus = false;
+                unlockedField.SetBlockedStatus(false);
                 Console.WriteLine($"Pole na pozycji {position} zostało odblokowane!");
             }
             else
@@ -87,13 +87,13 @@ public class BigMap : Map
         _fields[position].Add(new BlockedField(position));
     }
 
-    public void AddUnlockedField(Point position, int keyId)
+    public void AddUnlockedField(Point position, int keyId, string accessCode)
     {
         if (!_fields.ContainsKey(position))
         {
             _fields[position] = new List<IMappable>();
         }
-        _fields[position].Add(new UnlockedField(position, keyId));
+        _fields[position].Add(new UnlockedField(position, keyId, accessCode));
     }
 
     public void AddKey(Point position, int keyId)
