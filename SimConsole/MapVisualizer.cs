@@ -49,6 +49,10 @@ public class MapVisualizer
                     {
                         Console.Write("X"); // Zablokowane pole
                     }
+                    else if (bigMap.IsPotion(new Point(x, y)))
+                    {
+                        Console.Write("E"); // Eliksir
+                    }
                     else if (bigMap.IsUnlockable(new Point(x, y)))
                     {
                         Console.Write("Y"); // Pole do odblokowania

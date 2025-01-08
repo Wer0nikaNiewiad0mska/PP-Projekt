@@ -11,6 +11,8 @@ namespace Simulation;
 
 public class Player : Creature
 {
+    private readonly HashSet<string> _effects = new(); // Lista aktywnych efektów
+    public InventorySystem Inventory { get; } = new(); // Ekwipunek gracza
     public override char Symbol => 'P'; // Stały symbol gracza
 
     private readonly HashSet<int> _keys = new();
@@ -68,6 +70,13 @@ public class Player : Creature
                     return false;
                 }
 
+                // Pole zajęte przez potke
+                if (obj is Potions)
+                {
+                    Console.WriteLine($"Ruch zablokowany! Pole {newPosition} zajęte przez eliksir.");
+                    return false;
+                }
+
                 // Pole zablokowane przez `UnlockedField`
                 if (obj is UnlockedField field && field.BlockedStatus)
                 {
@@ -90,32 +99,19 @@ public class Player : Creature
 
     public void InteractField(BigMap map, string accessCode)
     {
-        var adjacentPoints = new[]
-        {
-        new Point(Position.X, Position.Y + 1),
-        new Point(Position.X, Position.Y - 1),
-        new Point(Position.X - 1, Position.Y),
-        new Point(Position.X + 1, Position.Y)
-    };
+        var adjacentPoints = GetAdjacentPoints();
 
         foreach (var point in adjacentPoints)
         {
-            Console.WriteLine($"Sprawdzanie pola: {point}"); // Debugowanie
-
             if (!map.TryGetField(point, out var objectsAtPoint))
-            {
-                Console.WriteLine($"Brak obiektów na pozycji {point}");
                 continue;
-            }
 
             var unlockedField = objectsAtPoint.OfType<UnlockedField>().FirstOrDefault();
             if (unlockedField != null)
             {
-                Console.WriteLine($"Znaleziono pole wymagające klucza o ID: {unlockedField.KeyId} na pozycji {point}");
-
                 if (unlockedField.BlockedStatus && _keys.Contains(unlockedField.KeyId))
                 {
-                    if (accessCode == unlockedField.AccessCode) // Porównanie wprowadzonego kodu z kodem pola
+                    if (accessCode == unlockedField.AccessCode)
                     {
                         unlockedField.SetBlockedStatus(false);
                         Console.WriteLine($"Pole {point} zostało odblokowane!");
@@ -138,41 +134,20 @@ public class Player : Creature
 
     public void InteractKey(BigMap map)
     {
-        var adjacentPoints = new[]
-        {
-        new Point(Position.X, Position.Y + 1),
-        new Point(Position.X, Position.Y - 1),
-        new Point(Position.X - 1, Position.Y),
-        new Point(Position.X + 1, Position.Y)
-    };
+        var adjacentPoints = GetAdjacentPoints();
 
         foreach (var point in adjacentPoints)
         {
-            Console.WriteLine($"Sprawdzanie pola: {point}"); // Debugowanie
-
             if (!map.TryGetField(point, out var objectsAtPoint))
-            {
-                Console.WriteLine($"Brak obiektów na pozycji {point}");
                 continue;
-            }
 
-            Console.WriteLine($"Obiekty na pozycji {point}: {string.Join(", ", objectsAtPoint.Select(o => o.GetType().Name))}");
-
-            // Znajdź klucz na polu
             var key = objectsAtPoint.OfType<Key>().FirstOrDefault();
             if (key != null)
             {
-                Console.WriteLine($"Znaleziono klucz o ID: {key.KeyId} na pozycji {point}");
-
-                // Dodaj klucz do zbioru gracza
                 if (_keys.Add(key.KeyId))
                 {
-                    // Usuń klucz z mapy
                     map.Remove(key, point);
-
-                    // Usuń klucz z lokalnej listy obiektów
                     objectsAtPoint.Remove(key);
-
                     Console.WriteLine($"Podniosłeś klucz {key.KeyId} i został on usunięty z mapy!");
                 }
                 else
@@ -186,7 +161,60 @@ public class Player : Creature
         Console.WriteLine("Nie znaleziono klucza w pobliżu.");
     }
 
-    // Metoda pomocnicza do uzyskania sąsiednich punktów
+    public void InteractPotion(BigMap map)
+    {
+        // Pobranie sąsiednich punktów
+        var adjacentPoints = GetAdjacentPoints();
+
+        foreach (var point in adjacentPoints)
+        {
+            if (!map.TryGetField(point, out var objectsAtPoint))
+                continue;
+
+            // Znajdź pierwszy eliksir na polu
+            var potion = objectsAtPoint.OfType<Potions>().FirstOrDefault();
+            if (potion != null)
+            {
+                Console.WriteLine($"Znalazłeś eliksir: {potion.Effect}");
+
+                // Dodaj eliksir do ekwipunku
+                Inventory.AddItem(potion, 1);
+
+                // Usuń eliksir z mapy
+                map.Remove(potion, point);
+                objectsAtPoint.Remove(potion);
+
+                Console.WriteLine($"Podniosłeś eliksir o efekcie '{potion.Effect}'!");
+                return; // Zbieramy tylko jeden eliksir na raz
+            }
+        }
+
+        Console.WriteLine("Nie znaleziono eliksiru w pobliżu.");
+    }
+
+    public void UsePotion(string effect)
+    {
+        // Znajdź eliksir w ekwipunku o podanym efekcie
+        var potionRecord = Inventory.InventoryRecords.FirstOrDefault(record => record.InventoryItem is Potions potion && potion.Effect == effect);
+
+        if (potionRecord == null)
+        {
+            Console.WriteLine("Nie posiadasz eliksiru o takim efekcie.");
+            return;
+        }
+
+        // Aktywuj efekt eliksiru
+        Console.WriteLine($"Użyto eliksiru o efekcie: {effect}");
+        _effects.Add(effect); // Dodaj efekt do aktywnych efektów
+        potionRecord.ReduceQuantity(1); // Zmniejsz ilość eliksirów
+
+        // Usuń eliksir z ekwipunku, jeśli jego ilość spadnie do 0
+        if (potionRecord.Quantity <= 0)
+        {
+            Inventory.InventoryRecords.Remove(potionRecord);
+        }
+    }
+
     private IEnumerable<Point> GetAdjacentPoints()
     {
         return new[]

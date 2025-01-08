@@ -26,6 +26,17 @@ public class BigMap : Map
     public override Point NextDiagonal(Point p, Direction d)
     {
         var nextPoint = p.NextDiagonal(d);
+        if (!Exist(nextPoint))
+        {
+            Console.WriteLine($"Punkt {nextPoint} nie istnieje na mapie.");
+            return p;
+        }
+
+        if (IsBlocked(nextPoint))
+        {
+            Console.WriteLine($"Punkt {nextPoint} jest zablokowany.");
+            return p;
+        }
         return Exist(nextPoint) && !IsBlocked(nextPoint) ? nextPoint : p;
     }
 
@@ -61,6 +72,11 @@ public class BigMap : Map
     {
         if (!_fields.TryGetValue(p, out var mappableObjects)) return false;
         return mappableObjects.OfType<Npc>().Any();
+    }
+    public bool IsPotion(Point p)
+    {
+        if (!_fields.TryGetValue(p, out var mappableObjects)) return false;
+        return mappableObjects.OfType<Potions>().Any();
     }
 
     public override bool IsBlocked(Point p)
@@ -130,5 +146,16 @@ public class BigMap : Map
         }
 
         _fields[point].Add(obj);
+    }
+    public void AddPotion(Point position, string effect)
+    {
+        if (!_fields.ContainsKey(position))
+        {
+            _fields[position] = new List<IMappable>();
+        }
+
+        var potion = new Potions(position, effect);
+        _fields[position].Add(potion);
+        Console.WriteLine($"Eliksir o efekcie '{effect}' został dodany na pozycję {position}.");
     }
 }

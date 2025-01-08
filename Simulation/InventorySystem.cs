@@ -54,5 +54,13 @@ public class InventorySystem
         {
             Quantity += amountToAdd;
         }
+        public void ReduceQuantity(int amountToReduce)
+        {
+            if (Quantity < amountToReduce)
+            {
+                throw new InvalidOperationException("Cannot reduce quantity below zero.");
+            }
+            Quantity -= amountToReduce;
+        }
     }
 }

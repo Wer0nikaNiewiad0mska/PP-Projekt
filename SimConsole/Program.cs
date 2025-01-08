@@ -24,12 +24,16 @@ internal class Program
             map.AddBlockedField(new Point(3, 3));
             map.AddBlockedField(new Point(2, 1));
 
+            //Dodajemy potki
+            map.AddPotion(new Point(5, 5), "DiagonalMovement");
+            map.AddPotion(new Point(8, 8), "DiagonalMovement");
+
             // Dodajemy odblokowywane pola i klucze
-            map.AddUnlockedField(new Point(2, 3), 1, "1234"); // Pole wymagające klucza o ID 1 i kodu "1234"
+            map.AddUnlockedField(new Point(2, 3), 1, "1111"); // Pole wymagające klucza o ID 1 i kodu "1234"
             map.AddKey(new Point(6, 6), 1);
             Console.WriteLine("Klucz 1 został dodany na mapę na pozycję (6, 6).");
 
-            map.AddUnlockedField(new Point(4, 4), 2, "5678"); // Pole wymagające klucza o ID 2 i kodu "5678"
+            map.AddUnlockedField(new Point(4, 4), 2, "1111"); // Pole wymagające klucza o ID 2 i kodu "5678"
             map.AddKey(new Point(2, 2), 2);
             Console.WriteLine("Klucz 2 został dodany na mapę na pozycję (2, 2).");
 
@@ -91,9 +95,27 @@ internal class Program
                     else if (input == ConsoleKey.E)
                     {
                         debugMessages.Add("Próba odblokowania pola...");
-                        Console.WriteLine("Wprowadź kod odblokowujący pole:");
+                        Console.WriteLine("Wprowadź kod odblokowujący pole, a następnie naciśnij enter:");
                         string accessCode = Console.ReadLine();
                         player.InteractField(map, accessCode);
+                    }
+                    else if (input == ConsoleKey.U)
+                    {
+                        debugMessages.Add("Próba zebrania eliksiru...");
+                        player.InteractPotion(map);
+                    }
+                    else if (input == ConsoleKey.I)
+                    {
+                        Console.WriteLine("Dostępne eliksiry w ekwipunku:");
+                        foreach (var record in player.Inventory.InventoryRecords.Where(r => r.InventoryItem is Potions))
+                        {
+                            var potion = (Potions)record.InventoryItem;
+                            Console.WriteLine($"- {potion.Effect} (ilość: {record.Quantity})");
+                        }
+
+                        Console.WriteLine("Wprowadź nazwę efektu eliksiru do użycia:");
+                        string effect = Console.ReadLine();
+                        player.UsePotion(effect); // Wywołanie metody `UsePotion`
                     }
                     else
                     {
