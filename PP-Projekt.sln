@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simulation", "Simulation\Simulation.csproj", "{0B04406C-8B93-426A-8A40-F8B91CCB7308}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Simulation", "Simulation\Simulation.csproj", "{0B04406C-8B93-426A-8A40-F8B91CCB7308}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimConsole", "SimConsole\SimConsole.csproj", "{5E0ECCAD-E688-40C7-B947-B4CCD9E4C780}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimConsole", "SimConsole\SimConsole.csproj", "{5E0ECCAD-E688-40C7-B947-B4CCD9E4C780}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimWeb", "SimWeb\SimWeb.csproj", "{15CEFA2A-EA4A-47DE-AF4B-A5D84D4CC0A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{5E0ECCAD-E688-40C7-B947-B4CCD9E4C780}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E0ECCAD-E688-40C7-B947-B4CCD9E4C780}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E0ECCAD-E688-40C7-B947-B4CCD9E4C780}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15CEFA2A-EA4A-47DE-AF4B-A5D84D4CC0A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15CEFA2A-EA4A-47DE-AF4B-A5D84D4CC0A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15CEFA2A-EA4A-47DE-AF4B-A5D84D4CC0A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15CEFA2A-EA4A-47DE-AF4B-A5D84D4CC0A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

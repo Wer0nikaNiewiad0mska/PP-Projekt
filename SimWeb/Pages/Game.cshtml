@@ -1,0 +1,39 @@
+﻿@page
+@model GameModel
+@{
+    ViewData["Title"] = "Game";
+}
+
+<h1>Game</h1>
+
+<div>
+    <h2>Map</h2>
+    <table style="border-collapse: collapse;">
+        @foreach (var row in Model.MapState)
+        {
+            <tr>
+                @foreach (var cell in row)
+                {
+                    <td style="width: 20px; height: 20px; text-align: center; border: 1px solid black;">
+                        @cell
+                    </td>
+                }
+            </tr>
+        }
+    </table>
+</div>
+
+<div>
+    <h2>Debug Messages</h2>
+    <ul>
+        @foreach (var message in Model.DebugMessages)
+        {
+            <li>@message</li>
+        }
+    </ul>
+</div>
+
+<form method="post">
+    <input type="text" name="command" placeholder="Enter W/A/S/D, Q, E, or U" />
+    <button type="submit">Submit</button>
+</form>
