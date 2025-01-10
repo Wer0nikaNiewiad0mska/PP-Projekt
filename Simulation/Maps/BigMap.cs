@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Simulation;
 
@@ -10,6 +11,7 @@ namespace Simulation.Maps;
 public class BigMap : Map
 {
     private readonly Dictionary<Point, List<IMappable>> _fields = new();
+
 
     public BigMap(int sizeX, int sizeY) : base(sizeX, sizeY)
     {
@@ -123,4 +125,7 @@ public class BigMap : Map
         var potion = new Potions(position, effect);
         _fields[position].Add(potion);
     }
+
+
+
 }

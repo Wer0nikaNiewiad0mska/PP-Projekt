@@ -8,22 +8,27 @@
     <link rel="stylesheet" href="~/css/site.css"
           asp-append-version="true" />
     <script src="~/js/site.js"></script>
+   
 </head>
 <body>
     <header>
-        <b id="site-name">SimWeb</b>
-        <nav id="navbar">
-            <a asp-page="/Index">STRONA GŁÓWNA   </a>
-            <a asp-page="/Game">GRA</a>
+        <nav class="navbar">
+            <div class="navbar-logo">
+                <h1>GAME PROJECT</h1>
+            </div>
+            <div class="navbar-links">
+                <a href="/Index">Home</a>
+                <a href="/Game">Game</a>
+            </div>
         </nav>
     </header>
     <main>
         @RenderBody()
     </main>
     <footer>
-        <p>2025 - Aleksandra Marasek, Weronika Niewiadomska</p>
+        <p>Weronika Niewiadomska, Aleksandra Marasek - Uniwersytet Ekonomiczny w Krakowie</p>
     </footer>
     <script src="~/js/site.js" asp-append-version="true"></script>
-
+   
 </body>
 </html>

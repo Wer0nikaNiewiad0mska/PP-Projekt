@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Simulation;
+using System.Text.Json;
 
 namespace Simulation;
 
@@ -18,46 +19,47 @@ public class Player : Creature
     private readonly HashSet<int> _keys = new();
     public Player(string name) : base(name) { }
 
+
     public void Go(Direction direction)
-    {
-        if (Map is not BigMap bigMap)
-            throw new InvalidOperationException("Map is not set or is not a BigMap.");
-
-        Console.WriteLine($"Gracz: {Name}, obecna pozycja: {Position}, próba ruchu w kierunku: {direction}");
-
-        Point newPosition;
-
-        // Sprawdzenie, czy efekt "DoubleMovement" jest aktywny
-        if (_effects.Contains("DoubleMovement"))
         {
-            Console.WriteLine("Efekt 'DoubleMovement' aktywny. Ruch podwójny.");
-            newPosition = bigMap.Next(Position, direction);
-            newPosition = bigMap.Next(newPosition, direction);
-            _effects.Remove("DoubleMovement"); // Usuń efekt po użyciu
-        }
-        else
-        {
-            Console.WriteLine("Efekt 'DoubleMovement' nieaktywny. Ruch pojedynczy.");
-            newPosition = bigMap.Next(Position, direction);
-        }
-        Console.WriteLine($"Nowa pozycja wyliczona: {newPosition}");
+            if (Map is not BigMap bigMap)
+                throw new InvalidOperationException("Map is not set or is not a BigMap.");
 
-        if (!CanMoveTo(bigMap, newPosition))
-        {
-            Console.WriteLine($"Nie można poruszyć się na pozycję {newPosition}. Ruch zablokowany.");
-            return;
+            Console.WriteLine($"Gracz: {Name}, obecna pozycja: {Position}, próba ruchu w kierunku: {direction}");
+
+            Point newPosition;
+
+            // Sprawdzenie, czy efekt "DoubleMovement" jest aktywny
+            if (_effects.Contains("DoubleMovement"))
+            {
+                Console.WriteLine("Efekt 'DoubleMovement' aktywny. Ruch podwójny.");
+                newPosition = bigMap.Next(Position, direction);
+                newPosition = bigMap.Next(newPosition, direction);
+                _effects.Remove("DoubleMovement"); // Usuń efekt po użyciu
+            }
+            else
+            {
+                Console.WriteLine("Efekt 'DoubleMovement' nieaktywny. Ruch pojedynczy.");
+                newPosition = bigMap.Next(Position, direction);
+            }
+            Console.WriteLine($"Nowa pozycja wyliczona: {newPosition}");
+
+            if (!CanMoveTo(bigMap, newPosition))
+            {
+                Console.WriteLine($"Nie można poruszyć się na pozycję {newPosition}. Ruch zablokowany.");
+                return;
+            }
+
+            // Aktualizacja pozycji
+            Console.WriteLine($"Poruszam się z {Position} na {newPosition}.");
+            bigMap.Remove(this, Position);
+            Position = newPosition;
+            bigMap.Add(this, Position);
+            Console.WriteLine($"Nowa pozycja gracza: {Position}");
+
+            // Usunięcie efektu po użyciu
+            _effects.Remove("DoubleMovement");
         }
-
-        // Aktualizacja pozycji
-        Console.WriteLine($"Poruszam się z {Position} na {newPosition}.");
-        bigMap.Remove(this, Position);
-        Position = newPosition;
-        bigMap.Add(this, Position);
-        Console.WriteLine($"Nowa pozycja gracza: {Position}");
-
-        // Usunięcie efektu po użyciu
-        _effects.Remove("DoubleMovement");
-    }
     public bool CanMoveTo(BigMap map, Point newPosition)
     {
         // Sprawdzenie, czy nowa pozycja istnieje na mapie

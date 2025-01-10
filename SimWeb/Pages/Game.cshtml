@@ -32,6 +32,25 @@
         }
     </ul>
 </div>
+<div>
+    <h2>Controls</h2>
+    <div style="display: flex; flex-direction: column; align-items: center;">
+        <form method="post">
+            <button type="submit" name="command" value="W">↑</button>
+        </form>
+        <div style="display: flex; justify-content: space-between; width: 60px;">
+            <form method="post">
+                <button type="submit" name="command" value="A">←</button>
+            </form>
+            <form method="post">
+                <button type="submit" name="command" value="D">→</button>
+            </form>
+        </div>
+        <form method="post">
+            <button type="submit" name="command" value="S">↓</button>
+        </form>
+    </div>
+</div>
 
 <form method="post">
     <input type="text" name="command" placeholder="Enter W/A/S/D, Q, E, or U" />
