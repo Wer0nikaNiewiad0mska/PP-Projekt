@@ -21,12 +21,13 @@ html {
 
 body {
     margin: 0;
-    background-color: #c5d6d9;
+    background: linear-gradient(180deg,#c5d6d9, #b1c4c7, #9cb3b8);
 }
 
 h1 {
     font-family: Helvetica;
     font-size: 30px;
+    margin-left: 20px;
 }
 
 b {
@@ -42,14 +43,14 @@ p {
 }
 
 header {
-    background: linear-gradient(90deg,#5e777a, #859b9e, #b3c6c9);
+    background: linear-gradient(90deg,#c5d6d9, #b1c4c7, #9cb3b8);
     color: #fff;
-    padding: 5px;
+    padding: 1px;
     box-shadow: 0 6px 6px rgba(0, 0, 0, 0.3);
 }
 
 footer {
-    background: linear-gradient(90deg,#5e777a, #859b9e, #b3c6c9);
+    background: linear-gradient(90deg,#c5d6d9, #b1c4c7, #9cb3b8);
     color: #fff;
     padding: 10px;
     box-shadow: 6px 6px 6px rgba(0, 0, 0, 0.3);
@@ -75,10 +76,9 @@ footer {
 
 .slideshow-container {
     position: relative;
-    width: 100%;
-    max-width: 800px;
+    width: 50%;
+    max-width: 300px;
     margin: auto;
-    overflow: hidden;
 }
 
 /* Styl dla obrazów w slajdzie */
@@ -106,20 +106,26 @@ footer {
 
 /* Ogólny kontener mapy */
 #map-container {
+    width: 580px; /* Szerokoœæ mapy */
+    height: 570px; /* Wysokoœæ mapy */
     display: flex;
-    flex-direction: column; /* Wiersze jeden pod drugim */
-    gap: 2px; /* Odstêp miêdzy wierszami */
-    margin: 10px auto; /* Wyœrodkowanie poziome */
-    margin-left: 200px;
-    align-items: center; /* Wyœrodkowanie w pionie */
-    justify-content: center; /* Wyœrodkowanie w poziomie */
-    width: fit-content; /* Dopasowanie szerokoœci do zawartoœci */
-    padding: 5px; /* Dodatkowy odstêp wokó³ mapy */
-    background-color: #f9f9f9; /* T³o kontenera (opcjonalnie) */
-    border: 1px solid #ddd; /* Obramowanie kontenera (opcjonalnie) */
-    border-radius: 10px; /* Zaokr¹glenie rogów */
+    flex-direction: column;
+    margin-left: 140px;
+    gap: 1px;
+    align-items: center; /* Wyœrodkowanie mapy w pionie */
+    justify-content: center; /* Wyœrodkowanie mapy w poziomie */
+    padding: 1px;
+    background-color: #5f6e70;
+    border: 10px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    visibility: visible; /* Ukryj mapê na starcie */
+    box-shadow: 6px 6px 6px rgba(0.3, 0.3, 0.3, 0.3);
 }
 
+#map-container.loaded {
+    visibility: hidden; /* Poka¿ mapê po pe³nym za³adowaniu */
+}
 /* Stylizacja wiersza */
 .row {
     display: flex; /* Komórki obok siebie */
@@ -133,8 +139,8 @@ footer {
     justify-content: center;
     width: 50px;
     height: 50px;
-    background-color: #f0f0f0; /* Domyœlny kolor pustych pól */
-    border: 1px solid #ddd; /* Opcjonalnie: obramowanie */
+    
+     /*      border: 1px solid #ddd;          Opcjonalnie: obramowanie */
     border-radius: 5px; /* Zaokr¹glenie rogów komórek */
 }
 
@@ -148,5 +154,169 @@ footer {
 .empty {
     width: 50px;
     height: 50px;
-    background-color: #fff; /* Kolor pustych pól */
+     /* Kolor pustych pól */
+}
+
+
+
+
+
+
+.main-content {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 15px;
+}
+
+.trip-section {
+    margin-bottom: 30px;
+}
+
+.trip-card {
+    display: flex;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+    .trip-card:hover {
+        transform: scale(1.10);
+    }
+
+.trip-image img {
+    width: 100%;
+    height: auto;
+    max-height: 200px;
+    object-fit: cover;
+}
+
+.trip-details {
+    padding: 15px;
+    flex: 1;
+}
+
+    .trip-details h2 {
+        margin: 0 0 10px;
+        font-size: 1.5rem;
+        color: #444;
+    }
+
+    .trip-details p {
+        margin: 5px 0;
+        font-size: 0.9rem;
+        color: #666;
+    }
+
+.trip-date {
+    font-weight: bold;
+    color: #333;
+}
+
+.trip-location {
+    font-size: 0.8rem;
+    color: #999;
+}
+
+.read-more {
+    text-decoration: none;
+    color: #0077cc;
+    font-weight: bold;
+    margin-top: 10px;
+    display: inline-block;
+}
+
+.main-footer {
+    background-color: #f9f9f9;
+    padding: 20px;
+    text-align: center;
+    border-top: 1px solid #ddd;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.social-links a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: #0077cc;
+}
+
+
+/* Kontener g³ówny */
+.controls {
+    flex-shrink: 0; /* Panel sterowania nie zmniejsza siê */
+}
+
+
+/* Podstawowe style dla przycisków */
+.btn {
+    padding: 5px 10px; /* Zmniejszone wymiary wewnêtrzne */
+    font-size: 14px; /* Mniejszy tekst */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+/* G³ówne przyciski */
+.btn-primary {
+    background-color: #5c7c82;
+    color: white;
+    box-shadow: 0 6px 6px rgba(0, 0, 0, 0.3);
+}
+
+    .btn-primary:hover {
+        background-color: #305157;
+    }
+
+/* Przyciski steruj¹ce */
+.btn-control {
+    background-color: #80a0a6;
+    color: white;
+    width: 40px; /* Zmniejszona szerokoœæ */
+    height: 40px; /* Zmniejszona wysokoœæ */
+    text-align: center;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px; /* Mniejszy tekst */
+    box-shadow: 0 6px 6px rgba(0, 0, 0, 0.3);
+}
+
+    .btn-control:hover {
+        background-color: #5c7c82;
+        transform: scale(1.05); /* Mniejszy efekt powiêkszenia */
+    }
+
+/* Przyciski dodatkowe */
+.btn-secondary {
+    background-color: #5c7c82;
+    color: white;
+    padding: 5px 15px; /* Kompaktowe wymiary */
+    font-size: 14px;
+    box-shadow: 0 6px 6px rgba(0, 0, 0, 0.3);
+}
+
+    .btn-secondary:hover {
+        background-color: #305157;
+    }
+
+/* Stylizacja dla pola tekstowego */
+.input-text {
+    padding: 5px; /* Zmniejszone odstêpy wewnêtrzne */
+    font-size: 14px; /* Mniejszy tekst */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: calc(100% - 12px); /* Dostosowanie szerokoœci */
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    box-shadow: 0 6px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Dodatkowe efekty */
+button:active {
+    transform: scale(0.95);
 }
