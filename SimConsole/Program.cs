@@ -12,42 +12,8 @@ internal class Program
     {
         try
         {
-            // Tworzymy mapę
-            var map = new BigMap(10, 10);
-
-            // Dodajemy zablokowane pola
-            MapRules.AddBlockedField(map.Fields, new Point(1, 1));
-            MapRules.AddBlockedField(map.Fields, new Point(1, 2));
-            MapRules.AddBlockedField(map.Fields, new Point(1, 3));
-            MapRules.AddBlockedField(map.Fields, new Point(3, 1));
-            MapRules.AddBlockedField(map.Fields, new Point(3, 2));
-            MapRules.AddBlockedField(map.Fields, new Point(3, 3));
-            MapRules.AddBlockedField(map.Fields, new Point(2, 1));
-
-            // Dodajemy eliksiry
-            MapRules.AddPotion(map.Fields, new Point(5, 5), "DoubleMovement");
-            MapRules.AddPotion(map.Fields, new Point(8, 8), "DoubleMovement");
-
-            // Dodajemy odblokowywane pola i klucze
-            MapRules.AddUnlockedField(map.Fields, new Point(2, 3), 1, "1111"); // Pole wymagające klucza o ID 1 i kodu "1111"
-            MapRules.AddKey(map.Fields, new Point(6, 6), 1);
-            Console.WriteLine("Klucz 1 został dodany na mapę na pozycję (6, 6).");
-
-            MapRules.AddUnlockedField(map.Fields, new Point(4, 4), 2, "2222"); // Pole wymagające klucza o ID 2 i kodu "2222"
-            MapRules.AddKey(map.Fields, new Point(2, 2), 2);
-            Console.WriteLine("Klucz 2 został dodany na mapę na pozycję (2, 2).");
-
-            // Tworzymy wizualizację mapy
-            var visualizer = new MapVisualizer(map);
-
-            // Tworzymy gracza i NPC + ich pozycje na mapie
-            var player = new Player("Hero");
-            var npc1 = new Npc("Npc1", "Użyj tego klucza aby otworzyć pole Y, które blokuje ostatni klucz.", 'n');
-            var npc2 = new Npc("Npc2", "Uważaj, nieznajomy.");
-
-            player.InitMapAndPosition(map, new Point(0, 0));
-            npc1.InitMapAndPosition(map, new Point(7, 6));
-            npc2.InitMapAndPosition(map, new Point(3, 6));
+            // Inicjalizujemy grę
+            var (map, player, npc1, npc2, visualizer) = InitializeGame();
 
             // Główna pętla gry
             Console.WriteLine("Użyj W/A/S/D do poruszania się. Naciśnij Q aby zebrać klucz, E aby odblokować pole, U aby zebrać eliksir, I aby użyć eliksiru, lub Enter aby zakończyć.");
@@ -149,5 +115,47 @@ internal class Program
         {
             Console.WriteLine($"Pojawił się błąd: {ex.Message}");
         }
+    }
+
+    private static (BigMap map, Player player, Npc npc1, Npc npc2, MapVisualizer visualizer) InitializeGame()
+    {
+        // Tworzymy mapę
+        var map = new BigMap(10, 10);
+
+        // Dodajemy zablokowane pola
+        MapRules.AddBlockedField(map.Fields, new Point(1, 1));
+        MapRules.AddBlockedField(map.Fields, new Point(1, 2));
+        MapRules.AddBlockedField(map.Fields, new Point(1, 3));
+        MapRules.AddBlockedField(map.Fields, new Point(3, 1));
+        MapRules.AddBlockedField(map.Fields, new Point(3, 2));
+        MapRules.AddBlockedField(map.Fields, new Point(3, 3));
+        MapRules.AddBlockedField(map.Fields, new Point(2, 1));
+
+        // Dodajemy eliksiry
+        MapRules.AddPotion(map.Fields, new Point(5, 5), "DoubleMovement");
+        MapRules.AddPotion(map.Fields, new Point(8, 8), "DoubleMovement");
+
+        // Dodajemy odblokowywane pola i klucze
+        MapRules.AddUnlockedField(map.Fields, new Point(2, 3), 1, "1111"); // Pole wymagające klucza o ID 1 i kodu "1111"
+        MapRules.AddKey(map.Fields, new Point(6, 6), 1);
+        Console.WriteLine("Klucz 1 został dodany na mapę na pozycję (6, 6).");
+
+        MapRules.AddUnlockedField(map.Fields, new Point(4, 4), 2, "2222"); // Pole wymagające klucza o ID 2 i kodu "2222"
+        MapRules.AddKey(map.Fields, new Point(2, 2), 2);
+        Console.WriteLine("Klucz 2 został dodany na mapę na pozycję (2, 2).");
+
+        // Tworzymy wizualizację mapy
+        var visualizer = new MapVisualizer(map);
+
+        // Tworzymy gracza i NPC + ich pozycje na mapie
+        var player = new Player("Hero");
+        var npc1 = new Npc("Npc1", "Użyj tego klucza aby otworzyć pole Y, które blokuje ostatni klucz.", 'n');
+        var npc2 = new Npc("Npc2", "Uważaj, nieznajomy.");
+
+        player.InitMapAndPosition(map, new Point(0, 0));
+        npc1.InitMapAndPosition(map, new Point(7, 6));
+        npc2.InitMapAndPosition(map, new Point(3, 6));
+
+        return (map, player, npc1, npc2, visualizer);
     }
 }

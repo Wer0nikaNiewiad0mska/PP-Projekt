@@ -14,26 +14,16 @@ public class GameSession
 
     public Point PlayerPosition => _player.Position;
 
-    public GameSession()
+    public GameSession(BigMap map)
     {
-        _map = new BigMap(10, 10);
+        _map = map ?? throw new ArgumentNullException(nameof(map));
         _player = new Player("Hero");
-        Initialize();
+        _player.InitMapAndPosition(_map, new Point(0, 0));
     }
 
-    private void Initialize()
+    private void InitializePlayer()
     {
-        // Tworzymy przykładową mapę z obiektami
-        _map.AddBlockedField(new Point(5, 5));
-        _map.AddUnlockedField(new Point(6, 5), 1, "code123");
-        _map.AddKey(new Point(7, 5), 1);
-        _map.AddPotion(new Point(8, 5), "SpeedBoost");
-
-        // Tworzymy NPC
-        var npc = new Npc("Gandalf", "Witaj, podróżniku! Czego szukasz?");
-        npc.InitMapAndPosition(_map, new Point(4, 5));
-
-        // Umieszczamy gracza na mapie
+        // Umieszczamy gracza na domyślnej pozycji
         _player.InitMapAndPosition(_map, new Point(0, 0));
     }
 
@@ -41,9 +31,8 @@ public class GameSession
     {
         _player.Go(direction);
     }
-
     public string GetDebugInfo()
     {
-        return $"Gracz: {_player.Position}";
+        return _player.ToString();
     }
 }
