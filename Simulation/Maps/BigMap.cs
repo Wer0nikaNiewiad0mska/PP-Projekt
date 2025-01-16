@@ -10,6 +10,7 @@ namespace Simulation.Maps;
 public class BigMap : Map
 {
     private readonly Dictionary<Point, List<IMappable>> _fields = new();
+    public Dictionary<Point, List<IMappable>> Fields => _fields;
 
     public BigMap(int sizeX, int sizeY) : base(sizeX, sizeY)
     {
@@ -23,104 +24,53 @@ public class BigMap : Map
         return Exist(nextPoint) && !IsBlocked(nextPoint) ? nextPoint : p;
     }
 
+    public override bool IsBlocked(Point position)
+    {
+        return MapRules.IsBlocked(_fields, position);
+    }
+
+    public override bool IsUnlockable(Point position)
+    {
+        return MapRules.IsUnlockable(_fields, position);
+    }
+
     public void UnlockField(Point position, int keyId)
     {
-        var unlockedField = At(position).OfType<UnlockedField>().FirstOrDefault();
-        if (unlockedField != null)
-        {
-            Console.WriteLine($"Próba odblokowania pola na pozycji {position} przy użyciu klucza {keyId}");
-            if (unlockedField.KeyId == keyId && unlockedField.BlockedStatus)
-            {
-                unlockedField.SetBlockedStatus(false);
-                Console.WriteLine($"Pole na pozycji {position} zostało odblokowane!");
-            }
-            else
-            {
-                Console.WriteLine($"Nie można odblokować pola. Nieprawidłowy klucz lub pole jest już odblokowane.");
-            }
-        }
-        else
-        {
-            Console.WriteLine($"Brak pola do odblokowania na pozycji {position}.");
-        }
+        MapRules.UnlockField(_fields, position, keyId);
     }
 
-    public bool IsKey(Point p)
+    public bool IsKey(Point position)
     {
-        if (!_fields.TryGetValue(p, out var mappableObjects)) return false;
-        return mappableObjects.OfType<Key>().Any();
+        return MapRules.IsKey(_fields, position);
     }
-    public bool IsPotion(Point p)
+
+    public bool IsPotion(Point position)
     {
-        if (!_fields.TryGetValue(p, out var mappableObjects)) return false;
-        return mappableObjects.OfType<Potions>().Any();
+        return MapRules.IsPotion(_fields, position);
     }
-
-    public override bool IsBlocked(Point p)
-    {
-        if (!_fields.TryGetValue(p, out var mappableObjects)) return false;
-        // Pole jest zablokowane, jeśli zawiera `BlockedField`
-        return mappableObjects.OfType<BlockedField>().Any();
-    }
-
-    public override bool IsUnlockable(Point p)
-    {
-        if (!_fields.TryGetValue(p, out var mappableObjects)) return false;
-        return mappableObjects.OfType<UnlockedField>().Any(f => f.BlockedStatus);
-    }
-
-
 
     public void AddBlockedField(Point position)
     {
-        if (!_fields.ContainsKey(position))
-        {
-            _fields[position] = new List<IMappable>();
-        }
-        _fields[position].Add(new BlockedField(position));
+        MapRules.AddBlockedField(_fields, position);
     }
 
     public void AddUnlockedField(Point position, int keyId, string accessCode)
     {
-        if (!_fields.ContainsKey(position))
-        {
-            _fields[position] = new List<IMappable>();
-        }
-        _fields[position].Add(new UnlockedField(position, keyId, accessCode));
+        MapRules.AddUnlockedField(_fields, position, keyId, accessCode);
     }
 
     public void AddKey(Point position, int keyId)
     {
-        if (!_fields.ContainsKey(position))
-        {
-            _fields[position] = new List<IMappable>();
-        }
+        MapRules.AddKey(_fields, position, keyId);
+    }
 
-        var key = new Key(position, keyId);
-        _fields[position].Add(key);
-        Console.WriteLine($"Klucz o ID {keyId} został dodany na pozycję {position}.");
+    public void AddPotion(Point position, string effect)
+    {
+        MapRules.AddPotion(_fields, position, effect);
     }
 
     public bool TryGetField(Point point, out List<IMappable> mappableObjects)
     {
-        Console.WriteLine($"Sprawdzanie obiektów na pozycji {point}"); // Debugowanie
-        if (_fields.TryGetValue(point, out mappableObjects))
-        {
-            Console.WriteLine($"Obiekty na pozycji {point}: {string.Join(", ", mappableObjects.Select(o => o.GetType().Name))}");
-            return true;
-        }
-
-        mappableObjects = null;
-        return false;
-    }
-    public void AddPotion(Point position, string effect)
-    {
-        if (!_fields.ContainsKey(position))
-        {
-            _fields[position] = new List<IMappable>();
-        }
-
-        var potion = new Potions(position, effect);
-        _fields[position].Add(potion);
+        return MapRules.TryGetField(_fields, point, out mappableObjects);
     }
 }

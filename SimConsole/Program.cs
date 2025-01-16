@@ -16,25 +16,25 @@ internal class Program
             var map = new BigMap(10, 10);
 
             // Dodajemy zablokowane pola
-            map.AddBlockedField(new Point(1, 1));
-            map.AddBlockedField(new Point(1, 2));
-            map.AddBlockedField(new Point(1, 3));
-            map.AddBlockedField(new Point(3, 1));
-            map.AddBlockedField(new Point(3, 2));
-            map.AddBlockedField(new Point(3, 3));
-            map.AddBlockedField(new Point(2, 1));
+            MapRules.AddBlockedField(map.Fields, new Point(1, 1));
+            MapRules.AddBlockedField(map.Fields, new Point(1, 2));
+            MapRules.AddBlockedField(map.Fields, new Point(1, 3));
+            MapRules.AddBlockedField(map.Fields, new Point(3, 1));
+            MapRules.AddBlockedField(map.Fields, new Point(3, 2));
+            MapRules.AddBlockedField(map.Fields, new Point(3, 3));
+            MapRules.AddBlockedField(map.Fields, new Point(2, 1));
 
-            //Dodajemy potki
-            map.AddPotion(new Point(5, 5), "DoubleMovement");
-            map.AddPotion(new Point(8, 8), "DoubleMovement");
+            // Dodajemy eliksiry
+            MapRules.AddPotion(map.Fields, new Point(5, 5), "DoubleMovement");
+            MapRules.AddPotion(map.Fields, new Point(8, 8), "DoubleMovement");
 
             // Dodajemy odblokowywane pola i klucze
-            map.AddUnlockedField(new Point(2, 3), 1, "1111"); // Pole wymagające klucza o ID 1 i kodu "1234"
-            map.AddKey(new Point(6, 6), 1);
+            MapRules.AddUnlockedField(map.Fields, new Point(2, 3), 1, "1111"); // Pole wymagające klucza o ID 1 i kodu "1111"
+            MapRules.AddKey(map.Fields, new Point(6, 6), 1);
             Console.WriteLine("Klucz 1 został dodany na mapę na pozycję (6, 6).");
 
-            map.AddUnlockedField(new Point(4, 4), 2, "1111"); // Pole wymagające klucza o ID 2 i kodu "5678"
-            map.AddKey(new Point(2, 2), 2);
+            MapRules.AddUnlockedField(map.Fields, new Point(4, 4), 2, "2222"); // Pole wymagające klucza o ID 2 i kodu "2222"
+            MapRules.AddKey(map.Fields, new Point(2, 2), 2);
             Console.WriteLine("Klucz 2 został dodany na mapę na pozycję (2, 2).");
 
             // Tworzymy wizualizację mapy
@@ -50,7 +50,7 @@ internal class Program
             npc2.InitMapAndPosition(map, new Point(3, 6));
 
             // Główna pętla gry
-            Console.WriteLine("Użyj W/A/S/D do poruszania się. Naciśnij Q aby zebrać klucz, E aby odblokować pole, lub Enter aby zakończyć.");
+            Console.WriteLine("Użyj W/A/S/D do poruszania się. Naciśnij Q aby zebrać klucz, E aby odblokować pole, U aby zebrać eliksir, I aby użyć eliksiru, lub Enter aby zakończyć.");
             var debugMessages = new List<string>();
 
             while (true)
