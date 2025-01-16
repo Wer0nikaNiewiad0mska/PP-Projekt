@@ -46,4 +46,9 @@ public class GameSession
     {
         return $"Gracz: {_player.Position}";
     }
+
+    public bool IsBlocked(int x, int y) => _map.IsBlocked(new Point(x, y));
+    public bool IsPotion(int x, int y) => _map.IsPotion(new Point(x, y));
+    public bool IsUnlockable(int x, int y) => _map.IsUnlockable(new Point(x, y));
+    public bool IsKey(int x, int y) => _map.IsKey(new Point(x, y));
 }
