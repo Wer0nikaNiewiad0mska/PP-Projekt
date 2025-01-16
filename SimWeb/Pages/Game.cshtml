@@ -1,58 +1,28 @@
 ﻿@page
 @model GameModel
 @{
-    ViewData["Title"] = "Game";
+    ViewData["Title"] = "Gra";
 }
 
-<h1>Game</h1>
+<h1>Gra</h1>
 
 <div>
-    <h2>Map</h2>
-    <table style="border-collapse: collapse;">
-        @foreach (var row in Model.MapState)
-        {
-            <tr>
-                @foreach (var cell in row)
-                {
-                    <td style="width: 20px; height: 20px; text-align: center; border: 1px solid black;">
-                        @cell
-                    </td>
-                }
-            </tr>
-        }
-    </table>
+    <h2>Pozycja gracza: (@Model.PlayerPosition.X, @Model.PlayerPosition.Y)</h2>
 </div>
 
-<div>
-    <h2>Debug Messages</h2>
-    <ul>
-        @foreach (var message in Model.DebugMessages)
-        {
-            <li>@message</li>
-        }
-    </ul>
-</div>
-<div>
-    <h2>Controls</h2>
-    <div style="display: flex; flex-direction: column; align-items: center;">
-        <form method="post">
-            <button type="submit" name="command" value="W">↑</button>
+<div class="controls">
+    <form method="post" asp-page-handler="Move" asp-route-direction="Up">
+        <button type="submit">W</button>
+    </form>
+    <div>
+        <form method="post" asp-page-handler="Move" asp-route-direction="Left">
+            <button type="submit">A</button>
         </form>
-        <div style="display: flex; justify-content: space-between; width: 60px;">
-            <form method="post">
-                <button type="submit" name="command" value="A">←</button>
-            </form>
-            <form method="post">
-                <button type="submit" name="command" value="D">→</button>
-            </form>
-        </div>
-        <form method="post">
-            <button type="submit" name="command" value="S">↓</button>
+        <form method="post" asp-page-handler="Move" asp-route-direction="Down">
+            <button type="submit">S</button>
+        </form>
+        <form method="post" asp-page-handler="Move" asp-route-direction="Right">
+            <button type="submit">D</button>
         </form>
     </div>
 </div>
-
-<form method="post">
-    <input type="text" name="command" placeholder="Enter W/A/S/D, Q, E, or U" />
-    <button type="submit">Submit</button>
-</form>

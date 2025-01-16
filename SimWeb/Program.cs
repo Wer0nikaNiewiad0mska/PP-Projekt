@@ -11,8 +11,7 @@ public class Program
 
         // Add services to the container.
         builder.Services.AddRazorPages();
-        builder.Services.AddDistributedMemoryCache(); // Obs³uga pamiêci sesji
-        builder.Services.AddSession(); // Dodanie obs³ugi sesji
+        builder.Services.AddSingleton<GameSession>(); // Dodanie GameSession jako singletona
 
         var app = builder.Build();
 
@@ -28,9 +27,6 @@ public class Program
 
         app.UseRouting();
 
-        // W³¹cz obs³ugê sesji
-        app.UseSession();
-        
         app.UseAuthorization();
 
         app.MapRazorPages();
