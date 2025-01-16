@@ -12,15 +12,12 @@ internal class Program
     {
         try
         {
-            // Inicjalizacja mapy, gracza i sesji gry
-            var map = MapInitialization.InitializeMap();
-            var player = MapInitialization.InitializePlayer(map);
-
-            var gameSession = new GameSession();
-            gameSession.Initialize(map, player);
+            var (bigMap, secondMap, player, maps) = GameInitialization.InitializeGame();
+            var session = new GameSession();
+            session.Initialize(bigMap, player, maps);
 
             // Główna pętla gry
-            RunGameLoop(gameSession);
+            RunGameLoop(session);
         }
         catch (Exception ex)
         {
@@ -33,7 +30,9 @@ internal class Program
         Console.WriteLine("Użyj W/A/S/D do poruszania się. Naciśnij Enter aby zakończyć.");
         while (true)
         {
-            Console.Clear();
+            // Odśwież mapę i wyświetl widok
+            session.UpdateMapView();
+
             Console.WriteLine("Pozycja gracza: " + session.PlayerPosition);
 
             var input = Console.ReadKey(true).Key;

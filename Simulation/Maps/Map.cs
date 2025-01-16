@@ -60,7 +60,26 @@ public abstract class Map
             Console.WriteLine($"Pozycja {position} jest teraz pusta i została usunięta z mapy.");
         }
     }
+    public bool TryGetField(Point point, out List<IMappable> mappableObjects)
+    {
+        if (_fields.TryGetValue(point, out var objects))
+        {
+            mappableObjects = objects;
+            return true;
+        }
 
+        mappableObjects = null;
+        return false;
+    }
+    public bool IsTeleport(Point position)
+    {
+        // Sprawdź, czy na pozycji znajduje się teleport
+        if (_fields.TryGetValue(position, out var objects))
+        {
+            return objects.OfType<TeleportField>().Any();
+        }
+        return false;
+    }
     public List<IMappable> At(int x, int y) => At(new Point(x, y));
 
     public List<IMappable> At(Point position)
@@ -84,4 +103,6 @@ public abstract class Map
     public abstract bool IsBlocked(Point position);
 
     public abstract bool IsUnlockable(Point position);
+    public abstract bool IsPotion(Point position);
+    public abstract bool IsKey(Point position);
 }

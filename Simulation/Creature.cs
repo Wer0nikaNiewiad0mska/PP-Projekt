@@ -47,8 +47,12 @@ public abstract class Creature : IMappable
         if (map == null)
             throw new ArgumentNullException(nameof(map), "Mapa nie może być pusta.");
 
+        // Usuń gracza z obecnej mapy, jeśli jest ustawiony
         if (Map != null)
-            throw new InvalidOperationException("Ta postać już znajduje się na mapie.");
+        {
+            Console.WriteLine($"Gracz {Name} jest już na mapie. Usuwam z pozycji {Position}.");
+            Map.Remove(this, Position);
+        }
 
         if (!map.Exist(position))
             throw new ArgumentOutOfRangeException(nameof(position), "Pozycja nie znajduje się na mapie.");

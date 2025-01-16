@@ -40,6 +40,8 @@ public class GameModel : PageModel
                     cellContent = "unlockable";
                 else if (_gameSession.IsKey(new Point(x, y)))
                     cellContent = "key";
+                else if (_gameSession.IsTeleport(new Point(x, y))) 
+                    cellContent = "teleport";
 
                 row.Add(cellContent);
             }

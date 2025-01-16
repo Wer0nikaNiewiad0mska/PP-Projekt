@@ -1,12 +1,4 @@
 ﻿using Simulation.Maps;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Simulation;
-using System.Text.Json;
 
 namespace Simulation;
 
@@ -21,8 +13,8 @@ public class Player : Creature
 
     public void Go(Direction direction)
     {
-        if (Map is not BigMap bigMap)
-            throw new InvalidOperationException("Map is not set or is not a BigMap.");
+        if (Map is not BigMap && Map is not SecondMap)
+            throw new InvalidOperationException("Map is not set or is not a valid type (BigMap or SecondMap).");
 
         Console.WriteLine($"Gracz: {Name}, obecna pozycja: {Position}, próba ruchu w kierunku: {direction}");
 
@@ -32,18 +24,18 @@ public class Player : Creature
         if (_effects.Contains("DoubleMovement"))
         {
             Console.WriteLine("Efekt 'DoubleMovement' aktywny. Ruch podwójny.");
-            newPosition = bigMap.Next(Position, direction);
-            newPosition = bigMap.Next(newPosition, direction);
+            newPosition = Map.Next(Position, direction);
+            newPosition = Map.Next(newPosition, direction);
             _effects.Remove("DoubleMovement"); // Usuń efekt po użyciu
         }
         else
         {
             Console.WriteLine("Efekt 'DoubleMovement' nieaktywny. Ruch pojedynczy.");
-            newPosition = bigMap.Next(Position, direction);
+            newPosition = Map.Next(Position, direction);
         }
         Console.WriteLine($"Nowa pozycja wyliczona: {newPosition}");
 
-        if (!CanMoveTo(bigMap, newPosition))
+        if (!CanMoveTo(Map, newPosition))
         {
             Console.WriteLine($"Nie można poruszyć się na pozycję {newPosition}. Ruch zablokowany.");
             return;
@@ -51,13 +43,13 @@ public class Player : Creature
 
         // Aktualizacja pozycji
         Console.WriteLine($"Poruszam się z {Position} na {newPosition}.");
-        bigMap.Remove(this, Position);
+        Map.Remove(this, Position);
         Position = newPosition;
-        bigMap.Add(this, Position);
+        Map.Add(this, Position);
         Console.WriteLine($"Nowa pozycja gracza: {Position}");
     }
 
-    public bool CanMoveTo(BigMap map, Point newPosition)
+    public bool CanMoveTo(Map map, Point newPosition)
     {
         // Sprawdzenie, czy nowa pozycja istnieje na mapie
         if (!map.Exist(newPosition))
@@ -147,7 +139,29 @@ public class Player : Creature
         Console.WriteLine("Nie znaleziono pola do odblokowania w pobliżu.");
     }
 
-    public void InteractKey(BigMap map)
+    public void InteractWithField(GameSession session, Map currentMap, Dictionary<string, Map> maps)
+    {
+        var teleportField = currentMap.At(Position).OfType<TeleportField>().FirstOrDefault();
+        if (teleportField != null)
+        {
+            Console.WriteLine($"Teleport znaleziony: {teleportField.TargetMapName} -> {teleportField.TargetPosition}");
+
+            if (maps.TryGetValue(teleportField.TargetMapName, out var targetMap))
+            {
+                // Użyj metody ChangeMap z GameSession
+                session.ChangeMap(targetMap, teleportField.TargetPosition);
+            }
+            else
+            {
+                Console.WriteLine($"Mapa docelowa '{teleportField.TargetMapName}' nie została znaleziona.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Brak teleportu na bieżącej pozycji.");
+        }
+    }
+    public void InteractKey(Map map)
     {
         var adjacentPoints = GetAdjacentPoints();
 
@@ -176,7 +190,7 @@ public class Player : Creature
         Console.WriteLine("Nie znaleziono klucza w pobliżu.");
     }
 
-    public void InteractPotion(BigMap map)
+    public void InteractPotion(Map map)
     {
         var adjacentPoints = GetAdjacentPoints();
 

@@ -2,19 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
-using Simulation;
 
 namespace Simulation.Maps;
 
-public class BigMap : Map
+public class SecondMap : Map
 {
     private readonly Dictionary<Point, List<IMappable>> _fields = new();
     public Dictionary<Point, List<IMappable>> Fields => _fields;
 
 
-    public BigMap(int sizeX, int sizeY) : base(sizeX, sizeY)
+    public SecondMap(int sizeX, int sizeY) : base(sizeX, sizeY)
     {
         if (sizeX > 1000) throw new ArgumentException(nameof(sizeX), "Wrong width");
         if (sizeY > 1000) throw new ArgumentException(nameof(sizeY), "Wrong height");

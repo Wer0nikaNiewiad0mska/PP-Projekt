@@ -11,13 +11,12 @@ public class Program
         // Dodajemy Razor Pages
         builder.Services.AddRazorPages();
 
-        // Inicjalizujemy map? i gracza
-        var map = MapInitialization.InitializeMap();
-        var player = MapInitialization.InitializePlayer(map);
+        // Inicjalizujemy mapy i gracza
+        var (bigMap, secondMap, player, maps) = GameInitialization.InitializeGame();
+        var session = new GameSession();
+        session.Initialize(bigMap, player, maps);
 
         // Rejestrujemy GameSession jako singleton
-        var session = new GameSession();
-        session.Initialize(map, player);
         builder.Services.AddSingleton(session);
 
         var app = builder.Build();

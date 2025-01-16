@@ -7,20 +7,37 @@ using System.Threading.Tasks;
 
 namespace Simulation;
 
-public static class MapInitialization
+public static class GameInitialization
 {
-    public static BigMap InitializeMap()
+    public static (Map bigMap, Map secondMap, Player player, Dictionary<string, Map>) InitializeGame()
     {
-        var map = new BigMap(10, 10);
-        MapRules.AddBlockedField(map.Fields, new Point(1, 1));
-        MapRules.AddPotion(map.Fields, new Point(5, 5), "DoubleMovement");
-        return map; // Zwracamy BigMap
-    }
+        var bigMap = new BigMap(10, 10);
+        var secondMap = new SecondMap(10, 10);
 
-    public static Player InitializePlayer(BigMap map)
-    {
         var player = new Player("Hero");
-        player.InitMapAndPosition(map, new Point(0, 0));
-        return player;
+
+        // Ustawienia mapy BigMap
+        bigMap.AddBlockedField(new Point(1, 1));
+        bigMap.AddPotion(new Point(5, 5), "DoubleMovement");
+
+        // Dodaj pole teleportacyjne na BigMap
+        var teleportToSecond = new TeleportField(new Point(3, 3), "SecondMap", new Point(0, 0));
+        teleportToSecond.InitMapAndPosition(bigMap, new Point(3, 3));
+
+        // Dodaj pole teleportacyjne na SecondMap
+        var teleportToBig = new TeleportField(new Point(4, 4), "BigMap", new Point(2, 2));
+        teleportToBig.InitMapAndPosition(secondMap, new Point(4, 4));
+
+        // Dodaj gracza na BigMap
+        player.InitMapAndPosition(bigMap, new Point(0, 0));
+
+        // Rejestracja map
+        var maps = new Dictionary<string, Map>
+    {
+        { "BigMap", bigMap },
+        { "SecondMap", secondMap }
+    };
+
+        return (bigMap, secondMap, player, maps);
     }
 }
