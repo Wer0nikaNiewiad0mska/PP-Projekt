@@ -17,8 +17,6 @@ public class GameModel : PageModel
         _gameSession = gameSession;
     }
 
-
-
     public List<List<string>> GetMapRepresentation()
     {
         var map = new List<List<string>>();
@@ -28,25 +26,25 @@ public class GameModel : PageModel
             var row = new List<string>();
             for (int x = 0; x < 10; x++)
             {
-                string cellContent = " "; // Puste pole jako domyœlne
+                string cellContent = " "; // Puste pole jako domy?lne
 
                 if (_gameSession.PlayerPosition.Equals(new Point(x, y)))
                 {
                     cellContent = "P"; // Pozycja gracza
                 }
-                else if (_gameSession.IsBlocked(x, y))
+                else if (_gameSession.IsBlocked(new Point(x, y)))
                 {
                     cellContent = "X"; // Pole zablokowane
                 }
-                else if (_gameSession.IsPotion(x, y))
+                else if (_gameSession.IsPotion(new Point(x, y)))
                 {
                     cellContent = "E"; // Eliksir
                 }
-                else if (_gameSession.IsUnlockable(x, y))
+                else if (_gameSession.IsUnlockable(new Point(x, y)))
                 {
-                    cellContent = "Y"; // Pole wymagaj¹ce klucza
+                    cellContent = "Y"; // Pole wymagaj?ce klucza
                 }
-                else if (_gameSession.IsKey(x, y))
+                else if (_gameSession.IsKey(new Point(x, y)))
                 {
                     cellContent = "*"; // Klucz
                 }
@@ -58,9 +56,6 @@ public class GameModel : PageModel
 
         return map;
     }
-
-
-
 
     public void OnGet()
     {

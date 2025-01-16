@@ -60,5 +60,3 @@ public class World
         actOn(item, worldItem);
     }
 }
-
-

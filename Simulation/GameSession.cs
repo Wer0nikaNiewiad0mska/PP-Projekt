@@ -9,35 +9,32 @@ namespace Simulation;
 
 public class GameSession
 {
-    private readonly BigMap _map;
-    private readonly Player _player;
+    private BigMap _map;
+    private Player _player;
 
     public Point PlayerPosition => _player.Position;
 
-    public GameSession(BigMap map)
+    public void Initialize(BigMap map, Player player)
     {
         _map = map ?? throw new ArgumentNullException(nameof(map));
-        _player = new Player("Hero");
-        _player.InitMapAndPosition(_map, new Point(0, 0));
-    }
+        _player = player ?? throw new ArgumentNullException(nameof(player));
 
-    private void InitializePlayer()
-    {
-        // Umieszczamy gracza na domyślnej pozycji
-        _player.InitMapAndPosition(_map, new Point(0, 0));
+        if (!_map.Exist(_player.Position))
+            throw new InvalidOperationException("Gracz musi być zainicjalizowany na mapie.");
     }
 
     public void MovePlayer(Direction direction)
     {
         _player.Go(direction);
     }
+
     public string GetDebugInfo()
     {
         return _player.ToString();
     }
 
-    public bool IsBlocked(int x, int y) => _map.IsBlocked(new Point(x, y));
-    public bool IsPotion(int x, int y) => _map.IsPotion(new Point(x, y));
-    public bool IsUnlockable(int x, int y) => _map.IsUnlockable(new Point(x, y));
-    public bool IsKey(int x, int y) => _map.IsKey(new Point(x, y));
+    public bool IsBlocked(Point position) => _map.IsBlocked(position);
+    public bool IsPotion(Point position) => _map.IsPotion(position);
+    public bool IsUnlockable(Point position) => _map.IsUnlockable(position);
+    public bool IsKey(Point position) => _map.IsKey(position);
 }
