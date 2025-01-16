@@ -4,37 +4,96 @@
     ViewData["Title"] = "Gra";
     var map = Model.GetMapRepresentation();
 }
-
-<h1>Gra</h1>
-
-<div>
-    <h2>Pozycja gracza: (@Model.PlayerPosition.X, @Model.PlayerPosition.Y)</h2>
-</div>
-
-
-<div class="map">
-    @for (int y = 0; y < map.Count; y++)
-    {
-        @for (int x = 0; x < map[y].Count; x++)
-        {
-            <div class="cell" data-content="@map[y][x]">@map[y][x]</div>
-        }
-    }
-</div>
-
-<div class="controls">
-    <form method="post" asp-page-handler="Move" asp-route-direction="Up">
-        <button type="submit">W</button>
-    </form>
-    <div>
-        <form method="post" asp-page-handler="Move" asp-route-direction="Left">
-            <button type="submit">A</button>
+<div style="display: flex; justify-content: space-between; gap: 20px; align-items: flex-start;">
+    <!-- Panel sterowania po lewej stronie -->
+    <div class="controls" style="display: flex; flex-direction: column; gap: 10px;">
+        <form method="post" asp-page-handler="Move" asp-route-direction="Up">
+            <button type="submit" style="width: 50px; height: 50px;">W</button>
         </form>
-        <form method="post" asp-page-handler="Move" asp-route-direction="Down">
-            <button type="submit">S</button>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+            <form method="post" asp-page-handler="Move" asp-route-direction="Left">
+                <button type="submit" style="width: 50px; height: 50px;">A</button>
+            </form>
+            <form method="post" asp-page-handler="Move" asp-route-direction="Down">
+                <button type="submit" style="width: 50px; height: 50px;">S</button>
+            </form>
+            <form method="post" asp-page-handler="Move" asp-route-direction="Right">
+                <button type="submit" style="width: 50px; height: 50px;">D</button>
+            </form>
+        </div>
+        <form method="post" asp-page-handler="CollectKey">
+            <button type="submit">Zbierz Klucz</button>
         </form>
-        <form method="post" asp-page-handler="Move" asp-route-direction="Right">
-            <button type="submit">D</button>
+        <form method="post" asp-page-handler="UsePotion">
+            <button type="submit">Użyj Eliksiru</button>
+        </form>
+        <form method="post" asp-page-handler="UnlockField">
+            <input type="text" name="accessCode" placeholder="Kod odblokowujący" required />
+            <button type="submit">Odblokuj Pole</button>
+        </form>
+        <form method="post" asp-page-handler="InteractWithNpc">
+            <button type="submit">Porozmawiaj z NPC</button>
         </form>
     </div>
+
+    <!-- Mapa gry -->
+    <div id="map-container">
+        @for (int y = 0; y < map.Count; y++) // Iteracja po wierszach
+        {
+            <div class="row">
+                @for (int x = 0; x < map[y].Count; x++) // Iteracja po komórkach w wierszu
+                {
+                    <div class="pozycja">
+                        @{
+                            string cellClass = map[y][x];
+                        }
+                        @switch (cellClass)
+                        {
+                            case "player":
+                                <img src="/img/Ola.png" alt="Player" class="img" />
+                                break;
+                            case "blocked":
+                                <img src="/img/blockedfield.png" alt="Blocked" class="img" />
+                                break;
+                            case "potion":
+                                <img src="/img/potion.png" alt="Potion" class="img" />
+                                break;
+                            case "unlockable":
+                                <img src="/img/unlockedfield.png" alt="Unlockable" class="img" />
+                                break;
+                            case "key":
+                                <img src="/img/key1.png" alt="Key" class="img" />
+                                break;
+                            default:
+                                <span class="empty"></span>
+                                break;
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </div>
 </div>
+
+<!-- Debug Messages -->
+@if (Model.DebugMessages.Any())
+{
+    <div>
+        <h3>Debug Messages:</h3>
+        <ul>
+            @foreach (var message in Model.DebugMessages)
+            {
+                <li>@message</li>
+            }
+        </ul>
+    </div>
+}
+
+<!-- Dialog Messages -->
+@if (!string.IsNullOrEmpty(Model.DialogueMessage))
+{
+    <div>
+        <h3>Dialog:</h3>
+        <p>@Model.DialogueMessage</p>
+    </div>
+}

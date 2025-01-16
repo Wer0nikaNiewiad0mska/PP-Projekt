@@ -9,6 +9,8 @@ using SimWeb;
 public class GameModel : PageModel
 {
     private readonly GameSession _gameSession;
+    public List<string> DebugMessages { get; private set; } = new List<string>();
+    public string DialogueMessage { get; private set; }
 
     public Point PlayerPosition => _gameSession.PlayerPosition;
 
@@ -21,7 +23,7 @@ public class GameModel : PageModel
     {
         var map = new List<List<string>>();
 
-        for (int y = 9; y >= 0; y--) // 10x10 mapa
+        for (int y = 9; y >= 0; y--)
         {
             var row = new List<string>();
             for (int x = 0; x < 10; x++)
@@ -59,25 +61,53 @@ public class GameModel : PageModel
 
     public void OnGet()
     {
-        // Nie wymaga dodatkowej logiki
+        // Domyœlna inicjalizacja
     }
 
     public IActionResult OnPostMove(string direction)
     {
-        Direction? parsedDirection = direction switch
+        var parsedDirection = direction switch
         {
             "Up" => Direction.Up,
             "Down" => Direction.Down,
             "Left" => Direction.Left,
             "Right" => Direction.Right,
-            _ => null // W przypadku nieprawid?owego kierunku
+            _ => (Direction?)null
         };
 
         if (parsedDirection.HasValue)
         {
+            DebugMessages.Add($"Gracz porusza siê w kierunku {parsedDirection.Value}.");
             _gameSession.MovePlayer(parsedDirection.Value);
         }
 
+        return RedirectToPage();
+    }
+
+    public IActionResult OnPostCollectKey()
+    {
+        DebugMessages.Add("Próba zebrania klucza...");
+        // Dodaj logikê zbierania klucza
+        return RedirectToPage();
+    }
+
+    public IActionResult OnPostUsePotion()
+    {
+        DebugMessages.Add("Próba u¿ycia eliksiru...");
+        // Dodaj logikê u¿ywania eliksiru
+        return RedirectToPage();
+    }
+
+    public IActionResult OnPostUnlockField(string accessCode)
+    {
+        DebugMessages.Add("Próba odblokowania pola...");
+        // Dodaj logikê odblokowania pola
+        return RedirectToPage();
+    }
+
+    public IActionResult OnPostInteractWithNpc()
+    {
+        DialogueMessage = "NPC: Witaj, podró¿niku!";
         return RedirectToPage();
     }
 }
