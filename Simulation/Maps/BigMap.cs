@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Simulation;
 
@@ -11,6 +12,7 @@ public class BigMap : Map
 {
     private readonly Dictionary<Point, List<IMappable>> _fields = new();
     public Dictionary<Point, List<IMappable>> Fields => _fields;
+
 
     public BigMap(int sizeX, int sizeY) : base(sizeX, sizeY)
     {
@@ -73,4 +75,7 @@ public class BigMap : Map
     {
         return MapRules.TryGetField(_fields, point, out mappableObjects);
     }
+
+
+
 }

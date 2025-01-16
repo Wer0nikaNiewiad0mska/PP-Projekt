@@ -1,0 +1,52 @@
+﻿@page
+@model SimWeb.Pages.IndexModel
+
+<h2>Gra wykonana w ramach projektu zaliczeniowego na Pracownię Programowania 3.
+</h2>
+
+<p>Napiszemy tu później jakieś inne mądre rzeczy, ale narazie nie wiem co</p>
+<p>Miau miau miau</p>
+
+<div class="slideshow-container">
+    <div class="slide fade">
+        <img src="/img/bezowychomik.png" alt="Image 1">
+    </div>
+    <div class="slide fade">
+        <img src="/img/bialychomik.png" alt="Image 2">
+    </div>
+    <div class="slide fade">
+        <img src="/img/czarnychomik.png" alt="Image 3">
+    </div>
+    <div class="slide fade">
+        <img src="/img/szarychomik.png" alt="Image 3">
+    </div>
+</div>
+
+<script>
+    let slideIndex = 0;
+
+    function showSlides() {
+        const slides = document.getElementsByClassName("slide");
+
+        // Ukryj wszystkie slajdy
+        for (let i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+        }
+
+        // Przejdź do następnego slajdu
+        slideIndex++;
+        if (slideIndex > slides.length) {
+            slideIndex = 1;
+        }
+
+        // Pokaż bieżący slajd
+        slides[slideIndex - 1].style.display = "block";
+
+        // Ustaw czas wyświetlania
+        setTimeout(showSlides, 3000); // 3000 ms = 3 sekundy
+    }
+
+    // Uruchom pokaz slajdów
+    showSlides();
+
+</script>
