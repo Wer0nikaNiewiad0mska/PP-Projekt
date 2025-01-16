@@ -4,35 +4,35 @@
     ViewData["Title"] = "Gra";
     var map = Model.GetMapRepresentation();
 }
-<div style="display: flex; justify-content: space-between; gap: 20px; align-items: flex-start;">
+<div style="display: flex; justify-content: flex-start; gap: 20px; align-items: flex-start; margin: 20px;">
     <!-- Panel sterowania po lewej stronie -->
     <div class="controls" style="display: flex; flex-direction: column; gap: 10px;">
         <form method="post" asp-page-handler="Move" asp-route-direction="Up">
-            <button type="submit" style="width: 50px; height: 50px;">W</button>
+            <button type="submit" class="btn btn-control">W</button>
         </form>
         <div style="display: flex; gap: 10px; justify-content: center;">
             <form method="post" asp-page-handler="Move" asp-route-direction="Left">
-                <button type="submit" style="width: 50px; height: 50px;">A</button>
+                <button type="submit" class="btn btn-control">A</button>
             </form>
             <form method="post" asp-page-handler="Move" asp-route-direction="Down">
-                <button type="submit" style="width: 50px; height: 50px;">S</button>
+                <button type="submit" class="btn btn-control">S</button>
             </form>
             <form method="post" asp-page-handler="Move" asp-route-direction="Right">
-                <button type="submit" style="width: 50px; height: 50px;">D</button>
+                <button type="submit" class="btn btn-control">D</button>
             </form>
         </div>
         <form method="post" asp-page-handler="CollectKey">
-            <button type="submit">Zbierz Klucz</button>
+            <button type="submit" class="btn btn-primary">Zbierz Klucz</button>
         </form>
         <form method="post" asp-page-handler="UsePotion">
-            <button type="submit">Użyj Eliksiru</button>
+            <button type="submit" class="btn btn-primary">Użyj Eliksiru</button>
         </form>
         <form method="post" asp-page-handler="UnlockField">
-            <input type="text" name="accessCode" placeholder="Kod odblokowujący" required />
-            <button type="submit">Odblokuj Pole</button>
+            <input type="text" name="accessCode" class="input-text" placeholder="Kod odblokowujący" required />
+            <button type="submit" class="btn btn-secondary">Odblokuj Pole</button>
         </form>
         <form method="post" asp-page-handler="InteractWithNpc">
-            <button type="submit">Porozmawiaj z NPC</button>
+            <button type="submit" class="btn btn-secondary">Porozmawiaj z NPC</button>
         </form>
     </div>
 
