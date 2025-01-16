@@ -2,12 +2,24 @@
 @model GameModel
 @{
     ViewData["Title"] = "Gra";
+    var map = Model.GetMapRepresentation();
 }
 
 <h1>Gra</h1>
 
 <div>
     <h2>Pozycja gracza: (@Model.PlayerPosition.X, @Model.PlayerPosition.Y)</h2>
+</div>
+
+
+<div class="map">
+    @for (int y = 0; y < map.Count; y++)
+    {
+        @for (int x = 0; x < map[y].Count; x++)
+        {
+            <div class="cell" data-content="@map[y][x]">@map[y][x]</div>
+        }
+    }
 </div>
 
 <div class="controls">
