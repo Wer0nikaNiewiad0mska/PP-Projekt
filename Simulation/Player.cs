@@ -19,47 +19,44 @@ public class Player : Creature
     private readonly HashSet<int> _keys = new();
     public Player(string name) : base(name) { }
 
-
     public void Go(Direction direction)
+    {
+        if (Map is not BigMap bigMap)
+            throw new InvalidOperationException("Map is not set or is not a BigMap.");
+
+        Console.WriteLine($"Gracz: {Name}, obecna pozycja: {Position}, próba ruchu w kierunku: {direction}");
+
+        Point newPosition;
+
+        // Sprawdzenie, czy efekt "DoubleMovement" jest aktywny
+        if (_effects.Contains("DoubleMovement"))
         {
-            if (Map is not BigMap bigMap)
-                throw new InvalidOperationException("Map is not set or is not a BigMap.");
-
-            Console.WriteLine($"Gracz: {Name}, obecna pozycja: {Position}, próba ruchu w kierunku: {direction}");
-
-            Point newPosition;
-
-            // Sprawdzenie, czy efekt "DoubleMovement" jest aktywny
-            if (_effects.Contains("DoubleMovement"))
-            {
-                Console.WriteLine("Efekt 'DoubleMovement' aktywny. Ruch podwójny.");
-                newPosition = bigMap.Next(Position, direction);
-                newPosition = bigMap.Next(newPosition, direction);
-                _effects.Remove("DoubleMovement"); // Usuń efekt po użyciu
-            }
-            else
-            {
-                Console.WriteLine("Efekt 'DoubleMovement' nieaktywny. Ruch pojedynczy.");
-                newPosition = bigMap.Next(Position, direction);
-            }
-            Console.WriteLine($"Nowa pozycja wyliczona: {newPosition}");
-
-            if (!CanMoveTo(bigMap, newPosition))
-            {
-                Console.WriteLine($"Nie można poruszyć się na pozycję {newPosition}. Ruch zablokowany.");
-                return;
-            }
-
-            // Aktualizacja pozycji
-            Console.WriteLine($"Poruszam się z {Position} na {newPosition}.");
-            bigMap.Remove(this, Position);
-            Position = newPosition;
-            bigMap.Add(this, Position);
-            Console.WriteLine($"Nowa pozycja gracza: {Position}");
-
-            // Usunięcie efektu po użyciu
-            _effects.Remove("DoubleMovement");
+            Console.WriteLine("Efekt 'DoubleMovement' aktywny. Ruch podwójny.");
+            newPosition = bigMap.Next(Position, direction);
+            newPosition = bigMap.Next(newPosition, direction);
+            _effects.Remove("DoubleMovement"); // Usuń efekt po użyciu
         }
+        else
+        {
+            Console.WriteLine("Efekt 'DoubleMovement' nieaktywny. Ruch pojedynczy.");
+            newPosition = bigMap.Next(Position, direction);
+        }
+        Console.WriteLine($"Nowa pozycja wyliczona: {newPosition}");
+
+        if (!CanMoveTo(bigMap, newPosition))
+        {
+            Console.WriteLine($"Nie można poruszyć się na pozycję {newPosition}. Ruch zablokowany.");
+            return;
+        }
+
+        // Aktualizacja pozycji
+        Console.WriteLine($"Poruszam się z {Position} na {newPosition}.");
+        bigMap.Remove(this, Position);
+        Position = newPosition;
+        bigMap.Add(this, Position);
+        Console.WriteLine($"Nowa pozycja gracza: {Position}");
+    }
+
     public bool CanMoveTo(BigMap map, Point newPosition)
     {
         // Sprawdzenie, czy nowa pozycja istnieje na mapie
@@ -88,7 +85,7 @@ public class Player : Creature
                     return false;
                 }
 
-                // Pole zajęte przez potke
+                // Pole zajęte przez eliksir
                 if (obj is Potions)
                 {
                     Console.WriteLine($"Ruch zablokowany! Pole {newPosition} zajęte przez eliksir.");
@@ -181,7 +178,6 @@ public class Player : Creature
 
     public void InteractPotion(BigMap map)
     {
-        // Pobranie sąsiednich punktów
         var adjacentPoints = GetAdjacentPoints();
 
         foreach (var point in adjacentPoints)
@@ -189,7 +185,6 @@ public class Player : Creature
             if (!map.TryGetField(point, out var objectsAtPoint))
                 continue;
 
-            // Znajdź pierwszy eliksir na polu
             var potion = objectsAtPoint.OfType<Potions>().FirstOrDefault();
             if (potion != null)
             {
@@ -203,7 +198,7 @@ public class Player : Creature
                 objectsAtPoint.Remove(potion);
 
                 Console.WriteLine($"Podniosłeś eliksir o efekcie '{potion.Effect}'!");
-                return; // Zbieramy tylko jeden eliksir na raz
+                return;
             }
         }
 
@@ -218,8 +213,8 @@ public class Player : Creature
             return;
         }
 
-        // Znajdź eliksir w ekwipunku
-        var potionRecord = Inventory.InventoryRecords.FirstOrDefault(record => record.InventoryItem is Potions potion && potion.Effect == effect);
+        var potionRecord = Inventory.InventoryRecords
+            .FirstOrDefault(record => record.InventoryItem is Potions potion && potion.Effect == effect);
 
         if (potionRecord == null)
         {
@@ -227,11 +222,9 @@ public class Player : Creature
             return;
         }
 
-        // Dodaj efekt do listy aktywnych
         Console.WriteLine($"Aktywacja efektu: {effect}");
         _effects.Add(effect);
 
-        // Zmniejsz ilość eliksirów
         potionRecord.ReduceQuantity(1);
         if (potionRecord.Quantity <= 0)
         {
@@ -243,11 +236,10 @@ public class Player : Creature
     {
         return new[]
         {
-           // Punkty w liniach prostych
-        new Point(Position.X, Position.Y + 1),
-        new Point(Position.X, Position.Y - 1),
-        new Point(Position.X - 1, Position.Y),
-        new Point(Position.X + 1, Position.Y),
+            new Point(Position.X, Position.Y + 1),
+            new Point(Position.X, Position.Y - 1),
+            new Point(Position.X - 1, Position.Y),
+            new Point(Position.X + 1, Position.Y),
         };
     }
 }
