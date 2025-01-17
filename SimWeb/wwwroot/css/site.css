@@ -146,7 +146,7 @@ footer {
 /* Stylizacja wiersza */
 .row {
     display: flex; /* Komórki obok siebie */
-    gap: 5px; /* Odstêp miêdzy komórkami */
+    gap: 1px; /* Odstêp miêdzy komórkami */
 }
 
 /* Komórki mapy */
@@ -154,8 +154,8 @@ footer {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 50px;
-    height: 50px;
+    width: 55px;
+    height: 55px;
     
      /*      border: 1px solid #ddd;          Opcjonalnie: obramowanie */
     border-radius: 5px; /* Zaokr¹glenie rogów komórek */
