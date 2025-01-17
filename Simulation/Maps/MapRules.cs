@@ -25,7 +25,8 @@ public static class MapRules
     public static bool IsBlocked(Dictionary<Point, List<IMappable>> fields, Point position)
     {
         if (!fields.TryGetValue(position, out var mappableObjects)) return false;
-        return mappableObjects.OfType<BlockedField>().Any();
+        return mappableObjects.OfType<BlockedField>().Any() ||
+               mappableObjects.OfType<UnlockedField>().Any(f => f.BlockedStatus);
     }
 
     public static bool IsNpc(Dictionary<Point, List<IMappable>> fields, Point position)

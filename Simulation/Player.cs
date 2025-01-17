@@ -151,15 +151,9 @@ public class Player : Creature
             var potion = mappableObjects.OfType<Potions>().FirstOrDefault();
             if (potion != null)
             {
-                Console.WriteLine($"Znalazłeś eliksir: {potion.Effect}");
-
-                // Dodaj eliksir do ekwipunku
                 Inventory.AddItem(potion, 1);
-
-                // Usuń eliksir z mapy
                 map.Remove(potion, point);
-                mappableObjects.Remove(potion);
-
+                objectsAtPoint.Remove(potion);
                 Console.WriteLine($"Podniosłeś eliksir o efekcie '{potion.Effect}'!");
                 return;
             }
