@@ -108,6 +108,7 @@ public class GameSession
         return _player.ToString();
     }
 
+    public bool IsFollower(Point position) => _follower?.Position == position;
     public bool IsBlocked(Point position) => _currentMap.IsBlocked(position);
     public bool IsPotion(Point position) => _currentMap.IsPotion(position);
     public bool IsUnlockable(Point position) => _currentMap.IsUnlockable(position);

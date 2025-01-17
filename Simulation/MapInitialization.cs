@@ -20,8 +20,8 @@ public static class GameInitialization
         bigMap.AddBlockedField(new Point(1, 1));
         bigMap.AddPotion(new Point(5, 5), "DoubleMovement");
         // Dodaj followera
-        var triggerPoint = new Point(6, 6); // Punkt, którego odblokowanie aktywuje followera
-        var follower = new Follower("Towarzysz", triggerPoint);
+        var triggerPoint = new Point(0, 6); // Punkt, którego odblokowanie aktywuje followera
+        var follower = new Follower("Wercia", triggerPoint);
         bigMap.Add(follower, new Point(3, 3)); // Początkowa pozycja followera
 
         // Dodaj triggerujące pole na mapie

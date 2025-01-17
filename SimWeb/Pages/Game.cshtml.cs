@@ -42,6 +42,8 @@ public class GameModel : PageModel
                     cellContent = "key";
                 else if (_gameSession.IsTeleport(new Point(x, y))) 
                     cellContent = "teleport";
+                else if (_gameSession.IsFollower(new Point(x, y))) // Nowy warunek
+                    cellContent = "follower";
 
                 row.Add(cellContent);
             }
