@@ -5,6 +5,7 @@
 document.addEventListener('keydown', (event) => {
     const key = event.key.toLowerCase(); // Pobierz klawisz w formie małych liter
     let buttonId;
+
     switch (key) {
         case 'w':
             buttonId = 'move-up';
@@ -36,6 +37,7 @@ document.addEventListener('keydown', (event) => {
         default:
             return; // Ignoruj inne klawisze
     }
+
     // Znajdź odpowiedni przycisk i wyślij zdarzenie kliknięcia
     const button = document.getElementById(buttonId);
     if (button) {
