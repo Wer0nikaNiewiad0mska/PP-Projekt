@@ -34,6 +34,9 @@
         <form method="post" asp-page-handler="InteractWithNpc">
             <button type="submit" class="btn btn-secondary">Porozmawiaj z NPC</button>
         </form>
+        <form method="post" asp-page-handler="ActivateFollower">
+            <button type="submit" class="btn btn-secondary">Aktywuj Followera</button>
+        </form>
     </div>
 
     <!-- Mapa gry -->
@@ -66,6 +69,9 @@
                                 break;
                             case "follower":
                                 <img src="/img/wercia.png" alt="Follower" class="img" />
+                                break;
+                            case "trigger":
+                                <img src="/img/key3.png" alt="Trigger Point" class="img" />
                                 break;
                             default:
                                 <span class="empty"></span>

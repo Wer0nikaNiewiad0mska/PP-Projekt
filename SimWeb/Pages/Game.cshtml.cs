@@ -42,8 +42,10 @@ public class GameModel : PageModel
                     cellContent = "key";
                 else if (_gameSession.IsTeleport(new Point(x, y))) 
                     cellContent = "teleport";
-                else if (_gameSession.IsFollower(new Point(x, y))) // Nowy warunek
+                else if (_gameSession.IsFollower(new Point(x, y)))
                     cellContent = "follower";
+                else if (_gameSession.IsTriggerPoint(new Point(x, y))) // Nowy warunek
+                    cellContent = "trigger";
 
                 row.Add(cellContent);
             }
@@ -146,6 +148,24 @@ public class GameModel : PageModel
                 break;
             }
         }
+        return RedirectToPage();
+    }
+
+    public IActionResult OnPostActivateFollower()
+    {
+        DebugMessages.Add("Próba aktywacji punktu...");
+        var playerPosition = _gameSession.PlayerPosition;
+
+        if (_gameSession.IsTriggerPoint(playerPosition))
+        {
+            _gameSession.ActivateFollower(playerPosition);
+            DebugMessages.Add($"Follower aktywowany w punkcie: {playerPosition}.");
+        }
+        else
+        {
+            DebugMessages.Add("Gracz nie znajduje siê na punkcie aktywacyjnym.");
+        }
+
         return RedirectToPage();
     }
 

@@ -46,6 +46,14 @@ public class GameSession
         UpdateMapView();
     }
 
+    public void ActivateFollower(Point position)
+    {
+        if (_follower.TriggerPoint == position)
+        {
+            _follower.ActivateFollower(position);
+        }
+    }
+
     public void ChangeMap(Map targetMap, Point targetPosition)
     {
         if (_currentMap == targetMap)
@@ -114,4 +122,6 @@ public class GameSession
     public bool IsUnlockable(Point position) => _currentMap.IsUnlockable(position);
     public bool IsKey(Point position) => _currentMap.IsKey(position);
     public bool IsTeleport(Point position) => _currentMap.At(position).OfType<TeleportField>().Any();
+
+    public bool IsTriggerPoint(Point position) => _currentMap.IsTriggerPoint(position);
 }
