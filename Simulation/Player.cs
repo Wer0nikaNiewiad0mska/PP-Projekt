@@ -145,10 +145,10 @@ public class Player : Creature
 
         foreach (var point in adjacentPoints)
         {
-            if (!map.TryGetField(point, out var objectsAtPoint))
+            if (!map.TryGetField(point, out var mappableObjects))
                 continue;
 
-            var potion = objectsAtPoint.OfType<Potions>().FirstOrDefault();
+            var potion = mappableObjects.OfType<Potions>().FirstOrDefault();
             if (potion != null)
             {
                 Console.WriteLine($"Znalazłeś eliksir: {potion.Effect}");
@@ -158,7 +158,7 @@ public class Player : Creature
 
                 // Usuń eliksir z mapy
                 map.Remove(potion, point);
-                objectsAtPoint.Remove(potion);
+                mappableObjects.Remove(potion);
 
                 Console.WriteLine($"Podniosłeś eliksir o efekcie '{potion.Effect}'!");
                 return;

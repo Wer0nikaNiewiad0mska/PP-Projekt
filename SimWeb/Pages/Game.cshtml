@@ -25,7 +25,8 @@
             <button type="submit" class="btn btn-primary">Zbierz Klucz</button>
         </form>
         <form method="post" asp-page-handler="UsePotion">
-            <button type="submit" class="btn btn-primary">Użyj Eliksiru</button>
+            <input type="text" name="potionEffect" class="input-text" placeholder="Efekt eliksiru" required />
+            <button type="submit" class="btn btn-secondary">Użyj Eliksiru</button>
         </form>
         <form method="post" asp-page-handler="UnlockField">
             <input type="text" name="accessCode" class="input-text" placeholder="Kod odblokowujący" required />
@@ -44,7 +45,7 @@
     </div>
 
     <!-- Mapa gry -->
-    <div id="map-container">
+    <div id="map-container" class="map @Model.CurrentMapName.ToLower()">
         @for (int y = 0; y < map.Count; y++) // Iteracja po wierszach
         {
             <div class="row">
@@ -60,13 +61,13 @@
                                 <img src="/img/Ola.png" alt="Player" class="img" />
                                 break;
                             case "blocked":
-                                <img src="/img/blockedfield.png" alt="Blocked" class="img" />
+                                <img src="/img/blocked.png" alt="Blocked" class="img" />
                                 break;
                             case "potion":
                                 <img src="/img/potion.png" alt="Potion" class="img" />
                                 break;
                             case "unlockable":
-                                <img src="/img/unlockedfield.png" alt="Unlockable" class="img" />
+                                <img src="/img/unlocked.png" alt="Unlockable" class="img" />
                                 break;
                             case "key":
                                 <img src="/img/key1.png" alt="Key" class="img" />
@@ -75,7 +76,7 @@
                                 <img src="/img/wercia.png" alt="Follower" class="img" />
                                 break;
                             case "teleport":
-                                <img src="/img/key5.png" alt="Teleport" class="img" />
+                                <img src="/img/teleport.png" alt="Teleport" class="img" />
                                 break;
                             case string npc when npc.StartsWith("npc:"):
                                 <img src="@($"/img/{npc.Substring(4)}.png")" alt="NPC" class="img" />

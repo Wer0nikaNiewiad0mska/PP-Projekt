@@ -20,9 +20,9 @@ public static class GameInitialization
         bigMap.AddBlockedField(new Point(1, 1));
         bigMap.AddPotion(new Point(5, 5), "DoubleMovement");
         // Dodaj followera
-        var triggerPoint = new Point(9, 0); // Punkt, którego odblokowanie aktywuje followera
+        var triggerPoint = new Point(8, 9); // Punkt, którego odblokowanie aktywuje followera
         var follower = new Follower("Wercia", triggerPoint);
-        bigMap.Add(follower, new Point(9, 1)); // Początkowa pozycja followera
+        bigMap.Add(follower, new Point(9, 9)); // Początkowa pozycja followera
         follower.InitMapAndPosition(bigMap, new Point(9, 1));
 
         // Dodaj triggerujące pole na mapie
@@ -37,7 +37,7 @@ public static class GameInitialization
         npc2.InitMapAndPosition(secondMap, new Point(9,9));
 
         // Dodaj pole teleportacyjne na BigMap
-        var teleportToSecond = new TeleportField(new Point(9, 9), "SecondMap", new Point(0, 0));
+        var teleportToSecond = new TeleportField(new Point(0, 9), "SecondMap", new Point(0, 0));
         teleportToSecond.InitMapAndPosition(bigMap, new Point(9, 9));
 
         // Dodaj pole teleportacyjne na SecondMap
