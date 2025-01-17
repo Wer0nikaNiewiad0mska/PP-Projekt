@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+ï»¿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Simulation.Maps;
 
@@ -13,7 +13,7 @@ public class GameModel : PageModel
     public List<string> DebugMessages { get; private set; } = new List<string>();
     public string DialogueMessage { get; private set; }
 
-    public string CurrentMapName => _gameSession.CurrentMap.GetType().Name; // Pobiera nazwê klasy mapy
+    public string CurrentMapName => _gameSession.CurrentMap.GetType().Name; // Pobiera nazwÃª klasy mapy
     public Point PlayerPosition => _gameSession.PlayerPosition;
 
     public GameModel(GameSession gameSession)
@@ -30,7 +30,7 @@ public class GameModel : PageModel
             var row = new List<string>();
             for (int x = 0; x < _gameSession.CurrentMap.SizeX; x++)
             {
-                var position = new Simulation.Point(x, y); // U¿ycie Simulation.Point
+                var position = new Simulation.Point(x, y); // UÂ¿ycie Simulation.Point
 
                 string cellContent = "empty";
 
@@ -43,7 +43,7 @@ public class GameModel : PageModel
                     var npc = _gameSession.CurrentMap.At(position).OfType<Npc>().FirstOrDefault();
                     if (npc != null)
                     {
-                        cellContent = $"npc:{npc.Name.ToLower()}"; // Dodajemy imiê NPC jako identyfikator
+                        cellContent = $"npc:{npc.Name.ToLower()}"; // Dodajemy imiÃª NPC jako identyfikator
                     }
                 }
                 else if (_gameSession.IsPotion(position))
@@ -93,8 +93,8 @@ public class GameModel : PageModel
 
     public IActionResult OnPostCollectKey()
     {
-        DebugMessages.Add("Próba zebrania klucza...");
-        // Logika zbierania klucza, na podstawie pobliskich pól
+        DebugMessages.Add("PrÃ³ba zebrania klucza...");
+        // Logika zbierania klucza, na podstawie pobliskich pÃ³l
         var adjacentPoints = GetAdjacentPoints();
         foreach (var point in adjacentPoints)
         {
@@ -112,21 +112,21 @@ public class GameModel : PageModel
     {
         if (string.IsNullOrEmpty(potionEffect))
         {
-            DebugMessages.Add("Nie podano efektu eliksiru do u¿ycia.");
+            DebugMessages.Add("Nie podano efektu eliksiru do uÂ¿ycia.");
             return RedirectToPage();
         }
 
-        DebugMessages.Add($"Próba u¿ycia eliksiru: {potionEffect}...");
-        _gameSession.Player.UsePotion(potionEffect); // Wywo³aj u¿ycie eliksiru
-        return RedirectToPage(); // Prze³aduj stronê po u¿yciu eliksiru
+        DebugMessages.Add($"PrÃ³ba uÂ¿ycia eliksiru: {potionEffect}...");
+        _gameSession.Player.UsePotion(potionEffect); // WywoÂ³aj uÂ¿ycie eliksiru
+        return RedirectToPage(); // PrzeÂ³aduj stronÃª po uÂ¿yciu eliksiru
     }
 
     public IActionResult OnPostUnlockField(string accessCode)
     {
         if (!string.IsNullOrEmpty(accessCode))
         {
-            DebugMessages.Add("Próba odblokowania pola...");
-            // Logika odblokowania pola, na podstawie pobliskich punktów
+            DebugMessages.Add("PrÃ³ba odblokowania pola...");
+            // Logika odblokowania pola, na podstawie pobliskich punktÃ³w
             var adjacentPoints = GetAdjacentPoints();
             foreach (var point in adjacentPoints)
             {
@@ -154,7 +154,7 @@ public class GameModel : PageModel
 
     public IActionResult OnPostActivateFollower()
     {
-        DebugMessages.Add("Próba aktywacji punktu...");
+        DebugMessages.Add("PrÃ³ba aktywacji punktu...");
         var playerPosition = _gameSession.PlayerPosition;
 
         if (_gameSession.IsTriggerPoint(playerPosition))
@@ -164,7 +164,7 @@ public class GameModel : PageModel
         }
         else
         {
-            DebugMessages.Add("Gracz nie znajduje siê na punkcie aktywacyjnym.");
+            DebugMessages.Add("Gracz nie znajduje siÃª na punkcie aktywacyjnym.");
         }
 
         return RedirectToPage();
@@ -172,9 +172,9 @@ public class GameModel : PageModel
 
     public IActionResult OnPostCollectPotion()
     {
-        DebugMessages.Add("Próba zebrania eliksiru...");
+        DebugMessages.Add("PrÃ³ba zebrania eliksiru...");
 
-        // Pobierz punkty w pobli¿u gracza
+        // Pobierz punkty w pobliÂ¿u gracza
         var adjacentPoints = GetAdjacentPoints();
 
         foreach (var point in adjacentPoints)
@@ -187,7 +187,7 @@ public class GameModel : PageModel
             }
         }
 
-        DebugMessages.Add("Nie znaleziono eliksiru w pobli¿u.");
+        DebugMessages.Add("Nie znaleziono eliksiru w pobliÂ¿u.");
         return RedirectToPage();
     }
 

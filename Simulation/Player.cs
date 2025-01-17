@@ -153,7 +153,7 @@ public class Player : Creature
             {
                 Inventory.AddItem(potion, 1);
                 map.Remove(potion, point);
-                objectsAtPoint.Remove(potion);
+                mappableObjects.Remove(potion);
                 Console.WriteLine($"Podniosłeś eliksir o efekcie '{potion.Effect}'!");
                 return;
             }
