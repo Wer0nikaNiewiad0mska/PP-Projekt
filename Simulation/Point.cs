@@ -27,4 +27,11 @@ public readonly struct Point
         }
         return default;
     }
+    public override bool Equals(object obj) => obj is Point other && X == other.X && Y == other.Y;
+
+    public override int GetHashCode() => HashCode.Combine(X, Y);
+
+    public static bool operator ==(Point left, Point right) => left.Equals(right);
+
+    public static bool operator !=(Point left, Point right) => !(left == right);
 }

@@ -9,7 +9,7 @@ namespace Simulation;
 
 public static class GameInitialization
 {
-    public static (Map bigMap, Map secondMap, Player player, Dictionary<string, Map>) InitializeGame()
+    public static (Map bigMap, Map secondMap, Player player, Dictionary<string, Map>, Follower follower) InitializeGame()
     {
         var bigMap = new BigMap(10, 10);
         var secondMap = new SecondMap(10, 10);
@@ -19,6 +19,10 @@ public static class GameInitialization
         // Ustawienia mapy BigMap
         bigMap.AddBlockedField(new Point(1, 1));
         bigMap.AddPotion(new Point(5, 5), "DoubleMovement");
+        //Dodanie followera
+        var follower = new Follower("Towarzysz", new Point(4, 4)); // Punkt aktywacji: (4,4)
+        bigMap.Add(follower, new Point(2, 2));
+
 
         // Dodaj pole teleportacyjne na BigMap
         var teleportToSecond = new TeleportField(new Point(3, 3), "SecondMap", new Point(0, 0));
@@ -38,6 +42,6 @@ public static class GameInitialization
         { "SecondMap", secondMap }
     };
 
-        return (bigMap, secondMap, player, maps);
+        return (bigMap, secondMap, player, maps, follower);
     }
 }

@@ -12,9 +12,9 @@ public class Program
         builder.Services.AddRazorPages();
 
         // Inicjalizujemy mapy i gracza
-        var (bigMap, secondMap, player, maps) = GameInitialization.InitializeGame();
+        var (bigMap, secondMap, player, maps, follower) = GameInitialization.InitializeGame();
         var session = new GameSession();
-        session.Initialize(bigMap, player, maps);
+        session.Initialize(bigMap, player, maps, follower);
 
         // Rejestrujemy GameSession jako singleton
         builder.Services.AddSingleton(session);

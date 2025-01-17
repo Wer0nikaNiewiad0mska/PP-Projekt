@@ -12,14 +12,16 @@ public class GameSession
     private Map _currentMap;
     private Player _player;
     private Dictionary<string, Map> _maps;
+    private Follower _follower;
 
     public Point PlayerPosition => _player.Position;
 
-    public void Initialize(Map initialMap, Player player, Dictionary<string, Map> maps)
+    public void Initialize(Map initialMap, Player player, Dictionary<string, Map> maps, Follower follower)
     {
         _currentMap = initialMap ?? throw new ArgumentNullException(nameof(initialMap));
         _player = player ?? throw new ArgumentNullException(nameof(player));
         _maps = maps ?? throw new ArgumentNullException(nameof(maps));
+        _follower = follower ?? throw new ArgumentNullException(nameof(follower));
 
         if (!_currentMap.Exist(_player.Position))
             throw new InvalidOperationException("Gracz musi być zainicjalizowany na mapie.");
@@ -27,13 +29,16 @@ public class GameSession
 
     public void MovePlayer(Direction direction)
     {
-        // Przesuń gracza w wybranym kierunku
+        var previousPlayerPosition = _player.Position;
+
         _player.Go(direction);
 
-        // Sprawdź, czy gracz wchodzi na pole teleportacyjne
+        // Sprawdź interakcje
         _player.InteractWithField(this, _currentMap, _maps);
 
-        // Odśwież widok mapy po każdej akcji
+        // Porusz followerem, jeśli istnieje
+        _follower?.FollowPlayer(previousPlayerPosition, _player, _currentMap);
+
         UpdateMapView();
     }
 

@@ -49,62 +49,7 @@ public class Player : Creature
         Console.WriteLine($"Nowa pozycja gracza: {Position}");
     }
 
-    public bool CanMoveTo(Map map, Point newPosition)
-    {
-        // Sprawdzenie, czy nowa pozycja istnieje na mapie
-        if (!map.Exist(newPosition))
-        {
-            Console.WriteLine($"Pozycja {newPosition} nie istnieje na mapie!");
-            return false;
-        }
-
-        // Pobierz obiekty na nowej pozycji
-        if (map.TryGetField(newPosition, out var mappableObjects))
-        {
-            foreach (var obj in mappableObjects)
-            {
-                // Pole zajęte przez NPC
-                if (obj is Npc npc)
-                {
-                    Console.WriteLine($"Ruch zablokowany! Pole {newPosition} zajęte przez NPC {npc.Name}.");
-                    return false;
-                }
-
-                // Pole zajęte przez klucz
-                if (obj is Key)
-                {
-                    Console.WriteLine($"Ruch zablokowany! Pole {newPosition} zajęte przez klucz.");
-                    return false;
-                }
-
-                // Pole zajęte przez eliksir
-                if (obj is Potions)
-                {
-                    Console.WriteLine($"Ruch zablokowany! Pole {newPosition} zajęte przez eliksir.");
-                    return false;
-                }
-
-                // Pole zablokowane przez `UnlockedField`
-                if (obj is UnlockedField field && field.BlockedStatus)
-                {
-                    Console.WriteLine($"Ruch zablokowany! Pole {newPosition} jest zablokowane (Y).");
-                    return false;
-                }
-
-                // Pole zablokowane przez `BlockedField`
-                if (obj is BlockedField)
-                {
-                    Console.WriteLine($"Ruch zablokowany! Pole {newPosition} jest zablokowane (X).");
-                    return false;
-                }
-            }
-        }
-
-        // Jeśli pole jest wolne, ruch jest możliwy
-        return true;
-    }
-
-    public void InteractField(BigMap map, string accessCode)
+    public void InteractField(BigMap map, string accessCode, Follower follower)
     {
         var adjacentPoints = GetAdjacentPoints();
 
@@ -122,6 +67,8 @@ public class Player : Creature
                     {
                         unlockedField.SetBlockedStatus(false);
                         Console.WriteLine($"Pole {point} zostało odblokowane!");
+                        // Sprawdź, czy to pole aktywuje followera
+                        follower.ActivateFollower(point);
                     }
                     else
                     {

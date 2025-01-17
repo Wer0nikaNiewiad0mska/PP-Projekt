@@ -12,12 +12,12 @@ internal class Program
     {
         try
         {
-            var (bigMap, secondMap, player, maps) = GameInitialization.InitializeGame();
+            var (bigMap, secondMap, player, maps, follower) = GameInitialization.InitializeGame();
             var session = new GameSession();
-            session.Initialize(bigMap, player, maps);
+            session.Initialize(bigMap, player, maps, follower);
 
             // Główna pętla gry
-            RunGameLoop(session);
+            RunGameLoop(session, follower);
         }
         catch (Exception ex)
         {
@@ -25,7 +25,7 @@ internal class Program
         }
     }
 
-    private static void RunGameLoop(GameSession session)
+    private static void RunGameLoop(GameSession session, Follower follower)
     {
         Console.WriteLine("Użyj W/A/S/D do poruszania się. Naciśnij Enter aby zakończyć.");
         while (true)
