@@ -27,10 +27,10 @@ public class Follower : Creature
             return;
         }
 
-        // Jeśli follower już stoi na pozycji gracza, nic nie robi
-        if (Position == player.Position)
+        // Jeśli follower już stoi na polu, które gracz właśnie opuścił, nic nie robi
+        if (Position == previousPlayerPosition)
         {
-            Console.WriteLine($"{Name} już jest na tej samej pozycji co gracz.");
+            Console.WriteLine($"{Name} już stoi na poprzednim polu gracza.");
             return;
         }
 

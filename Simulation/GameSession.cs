@@ -29,8 +29,9 @@ public class GameSession
 
     public void MovePlayer(Direction direction)
     {
-        var previousPlayerPosition = _player.Position;
+        var previousPlayerPosition = _player.Position; // Zachowaj poprzednią pozycję gracza
 
+        // Przesuń gracza
         _player.Go(direction);
 
         // Sprawdź interakcje
