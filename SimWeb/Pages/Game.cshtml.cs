@@ -13,6 +13,7 @@ public class GameModel : PageModel
     public List<string> DebugMessages { get; private set; } = new List<string>();
     public string DialogueMessage { get; private set; }
 
+    public string CurrentMapName => _gameSession.CurrentMap.GetType().Name; // Pobiera nazwê klasy mapy
     public Point PlayerPosition => _gameSession.PlayerPosition;
 
     public GameModel(GameSession gameSession)
@@ -109,16 +110,15 @@ public class GameModel : PageModel
 
     public IActionResult OnPostUsePotion(string potionEffect)
     {
-        if (!string.IsNullOrEmpty(potionEffect))
+        if (string.IsNullOrEmpty(potionEffect))
         {
-            DebugMessages.Add($"Próba u?ycia eliksiru: {potionEffect}...");
-            // Logika u?ycia eliksiru
+            DebugMessages.Add("Nie podano efektu eliksiru do u¿ycia.");
+            return RedirectToPage();
         }
-        else
-        {
-            DebugMessages.Add("Nie podano efektu eliksiru.");
-        }
-        return RedirectToPage();
+
+        DebugMessages.Add($"Próba u¿ycia eliksiru: {potionEffect}...");
+        _gameSession.Player.UsePotion(potionEffect); // Wywo³aj u¿ycie eliksiru
+        return RedirectToPage(); // Prze³aduj stronê po u¿yciu eliksiru
     }
 
     public IActionResult OnPostUnlockField(string accessCode)

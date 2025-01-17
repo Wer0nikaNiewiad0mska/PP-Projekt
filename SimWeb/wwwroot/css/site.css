@@ -115,13 +115,30 @@ footer {
     align-items: center; /* Wyœrodkowanie mapy w pionie */
     justify-content: center; /* Wyœrodkowanie mapy w poziomie */
     padding: 1px;
-    background-color: #5f6e70;
+    
     border: 10px solid #ddd;
     border-radius: 10px;
     overflow: hidden;
     visibility: visible; /* Ukryj mapê na starcie */
     box-shadow: 6px 6px 6px rgba(0.3, 0.3, 0.3, 0.3);
 }
+
+
+    #map-container.bigmap {
+        background-image: url('/img/bigMap.png');
+        background-size: cover; /* Dopasowanie obrazu do kontenera */
+        background-repeat: no-repeat; /* Zapobieganie powtarzaniu obrazu */
+        background-position: center;
+    }
+
+    #map-container.secondmap {
+        background-image: url('/img/secondMap.png');
+        background-size: cover; /* Dopasowanie obrazu do kontenera */
+        background-repeat: no-repeat; /* Zapobieganie powtarzaniu obrazu */
+        background-position: center;
+    }
+
+
 
 #map-container.loaded {
     visibility: hidden; /* Poka¿ mapê po pe³nym za³adowaniu */

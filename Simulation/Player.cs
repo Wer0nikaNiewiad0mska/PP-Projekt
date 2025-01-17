@@ -145,10 +145,10 @@ public class Player : Creature
 
         foreach (var point in adjacentPoints)
         {
-            if (!map.TryGetField(point, out var objectsAtPoint))
+            if (!map.TryGetField(point, out var mappableObjects))
                 continue;
 
-            var potion = objectsAtPoint.OfType<Potions>().FirstOrDefault();
+            var potion = mappableObjects.OfType<Potions>().FirstOrDefault();
             if (potion != null)
             {
                 Inventory.AddItem(potion, 1);
