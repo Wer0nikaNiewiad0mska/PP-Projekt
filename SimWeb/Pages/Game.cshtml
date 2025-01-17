@@ -38,7 +38,6 @@
             <button id="collect-potion" button type="submit" class="btn btn-primary">Zbierz Eliksir</button>
         </form>
     </div>
-
     <!-- Mapa gry -->
     <div id="map-container" class="map @Model.CurrentMapName.ToLower()">
         @for (int y = 0; y < map.Count; y++) // Iteracja po wierszach
@@ -47,10 +46,7 @@
                 @for (int x = 0; x < map[y].Count; x++) // Iteracja po komórkach w wierszu
                 {
                     <div class="pozycja">
-                        @{
-                            string cellClass = map[y][x];
-                        }
-                        @switch (cellClass)
+                        @switch (map[y][x])
                         {
                             case "player":
                                 <img src="/img/Ola.png" alt="Player" class="img" />
@@ -88,27 +84,16 @@
             </div>
         }
     </div>
+
+    <!-- Okno dialogowe -->
+    @if (!string.IsNullOrEmpty(Model.DialogueMessage))
+    {
+        var dialogueParts = Model.DialogueMessage.Split(':'); // Zakładamy, że używamy dwukropka jako separatora
+        var npcName = dialogueParts[0].Trim();
+        var npcDialogue = string.Join(":", dialogueParts.Skip(1)).Trim();
+        <div class="dialog-box">
+            <h3>@npcName</h3>
+            <p>@npcDialogue</p>
+        </div>
+    }
 </div>
-
-<!-- Debug Messages -->
-@if (Model.DebugMessages.Any())
-{
-    <div>
-        <h3>Debug Messages:</h3>
-        <ul>
-            @foreach (var message in Model.DebugMessages)
-            {
-                <li>@message</li>
-            }
-        </ul>
-    </div>
-}
-
-<!-- Dialog Messages -->
-@if (!string.IsNullOrEmpty(Model.DialogueMessage))
-{
-    <div>
-        <h3>Dialog:</h3>
-        <p>@Model.DialogueMessage</p>
-    </div>
-}

@@ -36,8 +36,6 @@ public class GameModel : PageModel
 
                 if (_gameSession.PlayerPosition.Equals(position))
                     cellContent = "player";
-                else if (_gameSession.IsBlocked(position))
-                    cellContent = "blocked";
                 else if (_gameSession.CurrentMap.At(position).OfType<Npc>().Any())
                 {
                     var npc = _gameSession.CurrentMap.At(position).OfType<Npc>().FirstOrDefault();
@@ -49,7 +47,9 @@ public class GameModel : PageModel
                 else if (_gameSession.IsPotion(position))
                     cellContent = "potion";
                 else if (_gameSession.IsUnlockable(position))
-                    cellContent = "unlockable";
+                    cellContent = "unlockable"; // Powinno być przed IsBlocked
+                else if (_gameSession.IsBlocked(position))
+                    cellContent = "blocked";
                 else if (_gameSession.IsKey(position))
                     cellContent = "key";
                 else if (_gameSession.IsTeleport(position))
@@ -68,7 +68,20 @@ public class GameModel : PageModel
     }
     public void OnGet()
     {
-        // Domy?lna inicjalizacja widoku
+        // Sprawdź obecność NPC w sąsiednich polach
+        var adjacentPoints = GetAdjacentPoints();
+        foreach (var point in adjacentPoints)
+        {
+            if (_gameSession.IsNpc(point))
+            {
+                var npc = _gameSession.CurrentMap.At(point).OfType<Npc>().FirstOrDefault();
+                if (npc != null)
+                {
+                    DialogueMessage = $"{npc.Name}: {npc.Dialogue}"; // Dodaj imię przed dialogiem
+                    DebugMessages.Add($"Dialog z NPC {npc.Name}: {npc.Dialogue}");
+                }
+            }
+        }
     }
 
     public IActionResult OnPostMove(string direction)
@@ -84,8 +97,23 @@ public class GameModel : PageModel
 
         if (parsedDirection.HasValue)
         {
-            DebugMessages.Add($"Gracz porusza si? w kierunku {parsedDirection.Value}.");
+            DebugMessages.Add($"Gracz porusza się w kierunku {parsedDirection.Value}.");
             _gameSession.MovePlayer(parsedDirection.Value);
+
+            // Sprawdź obecność NPC w sąsiednich polach po ruchu
+            var adjacentPoints = GetAdjacentPoints();
+            foreach (var point in adjacentPoints)
+            {
+                if (_gameSession.IsNpc(point))
+                {
+                    var npc = _gameSession.CurrentMap.At(point).OfType<Npc>().FirstOrDefault();
+                    if (npc != null)
+                    {
+                        DialogueMessage = npc.Dialogue; // Ustaw dialog NPC
+                        DebugMessages.Add($"Dialog z NPC: {DialogueMessage}");
+                    }
+                }
+            }
         }
 
         return RedirectToPage();

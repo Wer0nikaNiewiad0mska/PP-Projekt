@@ -145,7 +145,10 @@ public class GameSession
 
     public bool IsTriggerPoint(Point position) => _currentMap.IsTriggerPoint(position);
 
-
+    public bool IsNpc(Point position)
+    {
+        return CurrentMap.At(position).OfType<Npc>().Any();
+    }
 
 
     private IEnumerable<Point> GetAdjacentPoints()

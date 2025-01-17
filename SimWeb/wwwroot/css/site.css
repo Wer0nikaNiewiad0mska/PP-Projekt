@@ -337,3 +337,37 @@ footer {
 button:active {
     transform: scale(0.95);
 }
+
+
+
+
+.dialog-box {
+    background-color: #ffffff;
+    border: 2px solid #80a0a6; /* Kolor zgodny z kontrolkami */
+    padding: 15px;
+    border-radius: 8px;
+    max-width: 300px; /* Szerokoœæ okna dialogowego */
+    font-family: Helvetica, sans-serif;
+    color: #333;
+    margin-left: 20px; /* Odstêp od mapy */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15); /* Cieñ dla wyraŸnoœci */
+}
+
+    .dialog-box h3 {
+        margin: 0 0 10px 0;
+        font-size: 18px;
+        font-weight: bold;
+        color: #5c7c82; /* Dopasowany kolor do przycisków */
+        text-align: left;
+    }
+
+    .dialog-box p {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+        .dialog-box p:hover {
+            background-color: #f1f1f1;
+            transition: background-color 0.3s ease;
+        }

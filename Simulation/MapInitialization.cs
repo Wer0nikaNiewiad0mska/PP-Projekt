@@ -20,13 +20,13 @@ public static class GameInitialization
         bigMap.AddBlockedField(new Point(7, 8));
         bigMap.AddBlockedField(new Point(7, 7));
         bigMap.AddBlockedField(new Point(8, 7));
-        bigMap.AddBlockedField(new Point(9, 7));
+        //bigMap.AddBlockedField(new Point(9, 7));
 
 
         bigMap.AddBlockedField(new Point(9, 2));
         bigMap.AddBlockedField(new Point(8, 2));
         bigMap.AddBlockedField(new Point(7, 2));
-        bigMap.AddBlockedField(new Point(7, 1));
+        //bigMap.AddBlockedField(new Point(7, 1));
 
         bigMap.AddUnlockedField(new Point(7, 9), 1, "1");
         bigMap.AddKey(new Point(4, 2), 1);
