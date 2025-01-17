@@ -8,39 +8,35 @@
     <!-- Panel sterowania po lewej stronie -->
     <div class="controls" style="display: flex; flex-direction: column; gap: 10px;">
         <form method="post" asp-page-handler="Move" asp-route-direction="Up">
-            <button type="submit" class="btn btn-control">W</button>
+            <button id="move-up" type="submit" class="btn btn-control">W</button>
         </form>
         <div style="display: flex; gap: 10px; justify-content: center;">
             <form method="post" asp-page-handler="Move" asp-route-direction="Left">
-                <button type="submit" class="btn btn-control">A</button>
+                <button id="move-left" type="submit" class="btn btn-control">A</button>
             </form>
             <form method="post" asp-page-handler="Move" asp-route-direction="Down">
-                <button type="submit" class="btn btn-control">S</button>
+                <button id="move-down" type="submit" class="btn btn-control">S</button>
             </form>
             <form method="post" asp-page-handler="Move" asp-route-direction="Right">
-                <button type="submit" class="btn btn-control">D</button>
+                <button id="move-right" type="submit" class="btn btn-control">D</button>
             </form>
         </div>
         <form method="post" asp-page-handler="CollectKey">
-            <button type="submit" class="btn btn-primary">Zbierz Klucz</button>
+            <button id="collect-key" button type="submit" class="btn btn-primary">Zbierz Klucz</button>
         </form>
-        <form method="post" asp-page-handler="UsePotion">
-            <button type="submit" class="btn btn-primary">Użyj Eliksiru</button>
+        <form method="post" asp-page-handler="OpenInventory">
+            <button id="open-inventory" button type="submit" class="btn btn-primary">Użyj Eliksiru</button>
         </form>
         <form method="post" asp-page-handler="UnlockField">
             <input type="text" name="accessCode" class="input-text" placeholder="Kod odblokowujący" required />
-            <button type="submit" class="btn btn-secondary">Odblokuj Pole</button>
-        </form>
-        <form method="post" asp-page-handler="InteractWithNpc">
-            <button type="submit" class="btn btn-secondary">Porozmawiaj z NPC</button>
+            <button id="open-lock" button type="submit" class="btn btn-secondary">Odblokuj Pole</button>
         </form>
         <form method="post" asp-page-handler="ActivateFollower">
-            <button type="submit" class="btn btn-secondary">Aktywuj Followera</button>
+            <button id="activate-follower" button type="submit" class="btn btn-secondary">Aktywuj Followera</button>
         </form>
         <form method="post" asp-page-handler="CollectPotion">
-            <button type="submit" class="btn btn-primary">Zbierz Eliksir</button>
+            <button id="collect-potion" button type="submit" class="btn btn-primary">Zbierz Eliksir</button>
         </form>
-
     </div>
 
     <!-- Mapa gry -->
