@@ -68,7 +68,10 @@ public class Player : Creature
                         unlockedField.SetBlockedStatus(false);
                         Console.WriteLine($"Pole {point} zostało odblokowane!");
                         // Sprawdź, czy to pole aktywuje followera
-                        follower.ActivateFollower(point);
+                        if (map.IsTriggerPoint(point))
+                        {
+                            follower.ActivateFollower(point);
+                        }
                     }
                     else
                     {

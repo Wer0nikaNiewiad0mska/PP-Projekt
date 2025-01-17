@@ -19,9 +19,13 @@ public static class GameInitialization
         // Ustawienia mapy BigMap
         bigMap.AddBlockedField(new Point(1, 1));
         bigMap.AddPotion(new Point(5, 5), "DoubleMovement");
-        //Dodanie followera
-        var follower = new Follower("Towarzysz", new Point(4, 4)); // Punkt aktywacji: (4,4)
-        bigMap.Add(follower, new Point(2, 2));
+        // Dodaj followera
+        var triggerPoint = new Point(6, 6); // Punkt, którego odblokowanie aktywuje followera
+        var follower = new Follower("Towarzysz", triggerPoint);
+        bigMap.Add(follower, new Point(3, 3)); // Początkowa pozycja followera
+
+        // Dodaj triggerujące pole na mapie
+        bigMap.AddTriggerPoint(triggerPoint);
 
 
         // Dodaj pole teleportacyjne na BigMap

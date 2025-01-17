@@ -10,6 +10,7 @@ public abstract class Map
 {
     private readonly Rectangle _map;
     private readonly Dictionary<Point, List<IMappable>> _fields = new();
+    private readonly HashSet<Point> _triggerPoints = new();
     public int SizeX { get; }
     public int SizeY { get; }
     protected Map(int sizeX, int sizeY)
@@ -94,6 +95,19 @@ public abstract class Map
     {
         Remove(mappable, p);
         Add(mappable, pn);
+    }
+
+    public void AddTriggerPoint(Point point)
+    {
+        if (!Exist(point))
+            throw new ArgumentOutOfRangeException(nameof(point), "Punkt nie istnieje na mapie.");
+
+        _triggerPoints.Add(point);
+    }
+
+    public bool IsTriggerPoint(Point point)
+    {
+        return _triggerPoints.Contains(point);
     }
 
     public virtual bool Exist(Point p) => _map.Contains(p);

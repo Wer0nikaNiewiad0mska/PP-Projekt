@@ -34,10 +34,13 @@ public class GameSession
         // Przesuń gracza
         _player.Go(direction);
 
-        // Sprawdź interakcje
-        _player.InteractWithField(this, _currentMap, _maps);
+        // Sprawdź interakcje z triggerującymi polami
+        if (_currentMap is BigMap bigMap)
+        {
+            _player.InteractField(bigMap, "accessCode", _follower);
+        }
 
-        // Porusz followerem, jeśli istnieje
+        // Porusz followerem, jeśli aktywowany
         _follower?.FollowPlayer(previousPlayerPosition, _player, _currentMap);
 
         UpdateMapView();
