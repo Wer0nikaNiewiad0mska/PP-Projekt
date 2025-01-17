@@ -39,6 +39,10 @@ public class SecondMap : Map
         MapRules.UnlockField(_fields, position, keyId);
     }
 
+    public override bool IsNpc(Point position)
+    {
+        return MapRules.IsNpc(_fields, position);
+    }
     public override bool IsPotion(Point position) => MapRules.IsPotion(_fields, position);
 
     public override bool IsKey(Point position) => MapRules.IsKey(_fields, position);

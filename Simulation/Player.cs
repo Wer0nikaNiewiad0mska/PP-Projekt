@@ -98,8 +98,7 @@ public class Player : Creature
 
             if (maps.TryGetValue(teleportField.TargetMapName, out var targetMap))
             {
-                // Użyj metody ChangeMap z GameSession
-                session.ChangeMap(targetMap, teleportField.TargetPosition);
+                session.ChangeMap(targetMap, teleportField.TargetPosition); // Zmiana mapy
             }
             else
             {

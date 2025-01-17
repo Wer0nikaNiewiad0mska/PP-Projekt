@@ -28,6 +28,12 @@ public static class MapRules
         return mappableObjects.OfType<BlockedField>().Any();
     }
 
+    public static bool IsNpc(Dictionary<Point, List<IMappable>> fields, Point position)
+    {
+        if (!fields.TryGetValue(position, out var mappableObjects)) return false;
+        return mappableObjects.OfType<Npc>().Any();
+    }
+
     // Sprawdzenie, czy na danej pozycji znajduje się pole odblokowywalne
     public static bool IsUnlockable(Dictionary<Point, List<IMappable>> fields, Point position)
     {

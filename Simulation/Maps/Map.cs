@@ -119,4 +119,6 @@ public abstract class Map
     public abstract bool IsUnlockable(Point position);
     public abstract bool IsPotion(Point position);
     public abstract bool IsKey(Point position);
+
+    public abstract bool IsNpc(Point position);
 }

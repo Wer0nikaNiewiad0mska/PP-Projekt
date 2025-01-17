@@ -37,6 +37,10 @@
         <form method="post" asp-page-handler="ActivateFollower">
             <button type="submit" class="btn btn-secondary">Aktywuj Followera</button>
         </form>
+        <form method="post" asp-page-handler="CollectPotion">
+            <button type="submit" class="btn btn-primary">Zbierz Eliksir</button>
+        </form>
+
     </div>
 
     <!-- Mapa gry -->
@@ -70,13 +74,18 @@
                             case "follower":
                                 <img src="/img/wercia.png" alt="Follower" class="img" />
                                 break;
+                            case "teleport":
+                                <img src="/img/key5.png" alt="Teleport" class="img" />
+                                break;
+                            case string npc when npc.StartsWith("npc:"):
+                                <img src="@($"/img/{npc.Substring(4)}.png")" alt="NPC" class="img" />
+                                break;
                             case "trigger":
                                 <img src="/img/key3.png" alt="Trigger Point" class="img" />
                                 break;
                             default:
                                 <span class="empty"></span>
                                 break;
-
                         }
                     </div>
                 }

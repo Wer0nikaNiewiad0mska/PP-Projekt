@@ -6,6 +6,7 @@ using Simulation.Maps;
 using Simulation;
 using SimWeb;
 
+
 public class GameModel : PageModel
 {
     private readonly GameSession _gameSession;
@@ -23,28 +24,38 @@ public class GameModel : PageModel
     {
         var map = new List<List<string>>();
 
-        for (int y = 9; y >= 0; y--)
+        for (int y = _gameSession.CurrentMap.SizeY - 1; y >= 0; y--)
         {
             var row = new List<string>();
-            for (int x = 0; x < 10; x++)
+            for (int x = 0; x < _gameSession.CurrentMap.SizeX; x++)
             {
+                var position = new Simulation.Point(x, y); // U¿ycie Simulation.Point
+
                 string cellContent = "empty";
 
-                if (_gameSession.PlayerPosition.Equals(new Point(x, y)))
+                if (_gameSession.PlayerPosition.Equals(position))
                     cellContent = "player";
-                else if (_gameSession.IsBlocked(new Point(x, y)))
+                else if (_gameSession.IsBlocked(position))
                     cellContent = "blocked";
-                else if (_gameSession.IsPotion(new Point(x, y)))
+                else if (_gameSession.CurrentMap.At(position).OfType<Npc>().Any())
+                {
+                    var npc = _gameSession.CurrentMap.At(position).OfType<Npc>().FirstOrDefault();
+                    if (npc != null)
+                    {
+                        cellContent = $"npc:{npc.Name.ToLower()}"; // Dodajemy imiê NPC jako identyfikator
+                    }
+                }
+                else if (_gameSession.IsPotion(position))
                     cellContent = "potion";
-                else if (_gameSession.IsUnlockable(new Point(x, y)))
+                else if (_gameSession.IsUnlockable(position))
                     cellContent = "unlockable";
-                else if (_gameSession.IsKey(new Point(x, y)))
+                else if (_gameSession.IsKey(position))
                     cellContent = "key";
-                else if (_gameSession.IsTeleport(new Point(x, y))) 
+                else if (_gameSession.IsTeleport(position))
                     cellContent = "teleport";
-                else if (_gameSession.IsFollower(new Point(x, y)))
+                else if (_gameSession.IsFollower(position))
                     cellContent = "follower";
-                else if (_gameSession.IsTriggerPoint(new Point(x, y))) // Nowy warunek
+                else if (_gameSession.IsTriggerPoint(position))
                     cellContent = "trigger";
 
                 row.Add(cellContent);
@@ -54,7 +65,6 @@ public class GameModel : PageModel
 
         return map;
     }
-
     public void OnGet()
     {
         // Domy?lna inicjalizacja widoku
@@ -137,17 +147,8 @@ public class GameModel : PageModel
 
     public IActionResult OnPostInteractWithNpc()
     {
-        DialogueMessage = "Brak NPC w pobli?u."; // Domy?lna wiadomo??
-        // Logika interakcji z NPC
-        var adjacentPoints = GetAdjacentPoints();
-        foreach (var point in adjacentPoints)
-        {
-            if (_gameSession.IsBlocked(point)) // Zak?adamy, ?e NPC s? na polach zablokowanych
-            {
-                DialogueMessage = "NPC: Witaj, podró?niku!";
-                break;
-            }
-        }
+        DialogueMessage = _gameSession.GetNpcDialogue(); // Pobierz dialog NPC
+        DebugMessages.Add($"Dialog z NPC: {DialogueMessage}");
         return RedirectToPage();
     }
 
@@ -165,6 +166,40 @@ public class GameModel : PageModel
         {
             DebugMessages.Add("Gracz nie znajduje siê na punkcie aktywacyjnym.");
         }
+
+        return RedirectToPage();
+    }
+
+    public IActionResult OnPostCollectPotion()
+    {
+        DebugMessages.Add("Próba zebrania eliksiru...");
+
+        // Pobierz punkty w pobli¿u gracza
+        var adjacentPoints = GetAdjacentPoints();
+
+        foreach (var point in adjacentPoints)
+        {
+            if (_gameSession.IsPotion(point))
+            {
+                DebugMessages.Add($"Zebrano eliksir z pozycji {point}.");
+                _gameSession.Player.InteractPotion(_gameSession.CurrentMap);
+                return RedirectToPage();
+            }
+        }
+
+        DebugMessages.Add("Nie znaleziono eliksiru w pobli¿u.");
+        return RedirectToPage();
+    }
+
+    public IActionResult OnPostInteractWithTeleport()
+    {
+        DebugMessages.Add("Sprawdzanie teleportu na obecnej pozycji...");
+
+        _gameSession.Player.InteractWithField(
+            _gameSession,
+            _gameSession.CurrentMap,
+            _gameSession.Maps
+        );
 
         return RedirectToPage();
     }

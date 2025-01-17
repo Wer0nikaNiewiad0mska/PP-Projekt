@@ -45,6 +45,12 @@ public class BigMap : Map
 
     public override bool IsKey(Point position) => MapRules.IsKey(_fields, position);
 
+
+    public override bool IsNpc(Point position)
+    {
+        return MapRules.IsNpc(_fields, position);
+    }
+
     public void AddBlockedField(Point position)
     {
         MapRules.AddBlockedField(_fields, position);

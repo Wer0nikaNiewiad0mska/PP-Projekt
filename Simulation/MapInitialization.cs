@@ -29,9 +29,16 @@ public static class GameInitialization
         bigMap.AddTriggerPoint(triggerPoint);
 
 
+        //Dodanie NPC na mapie
+        var Olamo = new Npc("Olamo", "Hejeczka", 'O');
+        Olamo.InitMapAndPosition(bigMap, new Point(4,4));
+
+        var npc2 = new Npc("RandomGuy", "Miau miau", 'R');
+        npc2.InitMapAndPosition(secondMap, new Point(9,9));
+
         // Dodaj pole teleportacyjne na BigMap
-        var teleportToSecond = new TeleportField(new Point(3, 3), "SecondMap", new Point(0, 0));
-        teleportToSecond.InitMapAndPosition(bigMap, new Point(3, 3));
+        var teleportToSecond = new TeleportField(new Point(9, 9), "SecondMap", new Point(0, 0));
+        teleportToSecond.InitMapAndPosition(bigMap, new Point(9, 9));
 
         // Dodaj pole teleportacyjne na SecondMap
         var teleportToBig = new TeleportField(new Point(4, 4), "BigMap", new Point(2, 2));

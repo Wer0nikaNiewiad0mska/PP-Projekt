@@ -13,8 +13,11 @@ public class GameSession
     private Player _player;
     private Dictionary<string, Map> _maps;
     private Follower _follower;
-
+    public Player Player => _player;
     public Point PlayerPosition => _player.Position;
+    public Map CurrentMap => _currentMap; // Dostęp do obecnej mapy
+    public Dictionary<string, Map> Maps => _maps; // Dostęp do wszystkich map
+   
 
     public void Initialize(Map initialMap, Player player, Dictionary<string, Map> maps, Follower follower)
     {
@@ -27,23 +30,37 @@ public class GameSession
             throw new InvalidOperationException("Gracz musi być zainicjalizowany na mapie.");
     }
 
+    public string GetNpcDialogue()
+    {
+        foreach (var point in GetAdjacentPoints())
+        {
+            if (_currentMap.IsNpc(point)) // Sprawdzamy, czy na sąsiednim polu jest NPC
+            {
+                if (_currentMap.TryGetField(point, out var mappableObjects))
+                {
+                    var npc = mappableObjects.OfType<Npc>().FirstOrDefault();
+                    if (npc != null)
+                    {
+                        return npc.CheckAndSpeak(PlayerPosition); // Zwracamy dialog NPC
+                    }
+                }
+            }
+        }
+
+        return "Brak NPC w pobliżu."; // Zwraca domyślny komunikat, jeśli nie znaleziono NPC
+    }
     public void MovePlayer(Direction direction)
     {
-        var previousPlayerPosition = _player.Position; // Zachowaj poprzednią pozycję gracza
+        var previousPlayerPosition = _player.Position;
 
         // Przesuń gracza
         _player.Go(direction);
 
-        // Sprawdź interakcje z triggerującymi polami
-        if (_currentMap is BigMap bigMap)
-        {
-            _player.InteractField(bigMap, "accessCode", _follower);
-        }
+        // Automatyczna interakcja z teleportem
+        _player.InteractWithField(this, _currentMap, _maps);
 
         // Porusz followerem, jeśli aktywowany
         _follower?.FollowPlayer(previousPlayerPosition, _player, _currentMap);
-
-        UpdateMapView();
     }
 
     public void ActivateFollower(Point position)
@@ -51,9 +68,13 @@ public class GameSession
         if (_follower.TriggerPoint == position)
         {
             _follower.ActivateFollower(position);
+            Console.WriteLine("Follower został aktywowany.");
+        }
+        else
+        {
+            Console.WriteLine("Follower nie został aktywowany - gracz nie jest na trigger point.");
         }
     }
-
     public void ChangeMap(Map targetMap, Point targetPosition)
     {
         if (_currentMap == targetMap)
@@ -76,7 +97,6 @@ public class GameSession
         Console.WriteLine($"Gracz został teleportowany na mapę: {_currentMap.GetType().Name}");
         UpdateMapView();
     }
-
     public void UpdateMapView()
     {
         Console.Clear();
@@ -124,4 +144,19 @@ public class GameSession
     public bool IsTeleport(Point position) => _currentMap.At(position).OfType<TeleportField>().Any();
 
     public bool IsTriggerPoint(Point position) => _currentMap.IsTriggerPoint(position);
+
+
+
+
+    private IEnumerable<Point> GetAdjacentPoints()
+    {
+        var current = _player.Position;
+        return new[]
+        {
+        new Point(current.X, current.Y + 1),
+        new Point(current.X, current.Y - 1),
+        new Point(current.X - 1, current.Y),
+        new Point(current.X + 1, current.Y),
+    };
+    }
 }
