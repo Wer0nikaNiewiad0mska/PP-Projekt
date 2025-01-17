@@ -19,6 +19,8 @@ public static class GameInitialization
         // Ustawienia mapy BigMap
         bigMap.AddBlockedField(new Point(1, 1));
         bigMap.AddPotion(new Point(5, 5), "DoubleMovement");
+        bigMap.AddUnlockedField(new Point(7, 9), 1, "1111");
+        bigMap.AddKey(new Point(2, 2), 1);
         // Dodaj followera
         var triggerPoint = new Point(9, 0); // Punkt, którego odblokowanie aktywuje followera
         var follower = new Follower("Wercia", triggerPoint);
