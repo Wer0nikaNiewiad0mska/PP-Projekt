@@ -46,7 +46,7 @@ public static class GameInitialization
         bigMap.AddTriggerPoint(triggerPoint);
 
         //Dodanie NPC na mapie
-        var Olamo = new Npc("Olamo", "Hej! Chyba widziałam jak Weronika wchodzi do tego miejsca i wpisuje 1 na drzwiach..", 'O');
+        var Olamo = new Npc("OlaMo", "Hej! Chyba widziałam jak Weronika wchodzi do tego miejsca i wpisuje 1 na drzwiach..", 'O');
         Olamo.InitMapAndPosition(bigMap, new Point(4, 4));
 
         //DRUGA MAPA
