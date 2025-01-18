@@ -19,10 +19,10 @@ document.addEventListener('keydown', (event) => {
         case 'd':
             buttonId = 'move-right';
             break;
-        case 'e':
+        case 'q':
             buttonId = 'collect-key';
             break;
-        case 'q':
+        case 'e':
             buttonId = 'open-lock';
             break;
         case 'i':
@@ -44,4 +44,3 @@ document.addEventListener('keydown', (event) => {
         button.click();
     }
 });
-

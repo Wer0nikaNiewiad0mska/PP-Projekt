@@ -13,11 +13,10 @@ public class BigMap : Map
     private readonly Dictionary<Point, List<IMappable>> _fields = new();
     public Dictionary<Point, List<IMappable>> Fields => _fields;
 
-
     public BigMap(int sizeX, int sizeY) : base(sizeX, sizeY)
     {
-        if (sizeX > 1000) throw new ArgumentException(nameof(sizeX), "Wrong width");
-        if (sizeY > 1000) throw new ArgumentException(nameof(sizeY), "Wrong height");
+        if (sizeX > 1000) throw new ArgumentException("Wrong width", nameof(sizeX));
+        if (sizeY > 1000) throw new ArgumentException("Wrong height", nameof(sizeY));
     }
 
     public override Point Next(Point p, Direction d)
@@ -38,13 +37,15 @@ public class BigMap : Map
 
     public void UnlockField(Point position, int keyId)
     {
-        MapRules.UnlockField(_fields, position, keyId);
+        if (!MapRules.UnlockField(_fields, position, keyId))
+        {
+            Console.WriteLine($"Failed to unlock field at {position} with key {keyId}.");
+        }
     }
 
     public override bool IsPotion(Point position) => MapRules.IsPotion(_fields, position);
 
     public override bool IsKey(Point position) => MapRules.IsKey(_fields, position);
-
 
     public override bool IsNpc(Point position)
     {

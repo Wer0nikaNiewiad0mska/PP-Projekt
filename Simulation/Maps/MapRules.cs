@@ -10,64 +10,46 @@ public static class MapRules
 {
     public static bool IsKey(Dictionary<Point, List<IMappable>> fields, Point position)
     {
-        if (!fields.TryGetValue(position, out var mappableObjects)) return false;
-        return mappableObjects.OfType<Key>().Any();
+        return fields.TryGetValue(position, out var mappableObjects) && mappableObjects.OfType<Key>().Any();
     }
 
-    // Sprawdzenie, czy na danej pozycji znajduje się eliksir
     public static bool IsPotion(Dictionary<Point, List<IMappable>> fields, Point position)
     {
-        if (!fields.TryGetValue(position, out var mappableObjects)) return false;
-        return mappableObjects.OfType<Potions>().Any();
+        return fields.TryGetValue(position, out var mappableObjects) && mappableObjects.OfType<Potions>().Any();
     }
 
-    // Sprawdzenie, czy na danej pozycji znajduje się pole zablokowane
     public static bool IsBlocked(Dictionary<Point, List<IMappable>> fields, Point position)
     {
-        if (!fields.TryGetValue(position, out var mappableObjects)) return false;
-        return mappableObjects.OfType<BlockedField>().Any() ||
-               mappableObjects.OfType<UnlockedField>().Any(f => f.BlockedStatus);
+        return fields.TryGetValue(position, out var mappableObjects) &&
+               (mappableObjects.OfType<BlockedField>().Any() ||
+                mappableObjects.OfType<UnlockedField>().Any(f => f.BlockedStatus));
     }
 
     public static bool IsNpc(Dictionary<Point, List<IMappable>> fields, Point position)
     {
-        if (!fields.TryGetValue(position, out var mappableObjects)) return false;
-        return mappableObjects.OfType<Npc>().Any();
+        return fields.TryGetValue(position, out var mappableObjects) && mappableObjects.OfType<Npc>().Any();
     }
 
-    // Sprawdzenie, czy na danej pozycji znajduje się pole odblokowywalne
     public static bool IsUnlockable(Dictionary<Point, List<IMappable>> fields, Point position)
     {
-        if (!fields.TryGetValue(position, out var mappableObjects)) return false;
-        return mappableObjects.OfType<UnlockedField>().Any(f => f.BlockedStatus);
+        return fields.TryGetValue(position, out var mappableObjects) && mappableObjects.OfType<UnlockedField>().Any(f => f.BlockedStatus);
     }
 
-    // Próba odblokowania pola
-    public static void UnlockField(Dictionary<Point, List<IMappable>> fields, Point position, int keyId)
+    public static bool UnlockField(Dictionary<Point, List<IMappable>> fields, Point position, int keyId)
     {
-        if (!fields.TryGetValue(position, out var mappableObjects)) return;
+        if (!fields.TryGetValue(position, out var mappableObjects)) return false;
 
         var unlockedField = mappableObjects.OfType<UnlockedField>().FirstOrDefault();
-        if (unlockedField != null)
+        if (unlockedField != null && unlockedField.KeyId == keyId && unlockedField.BlockedStatus)
         {
-            Console.WriteLine($"Próba odblokowania pola na pozycji {position} przy użyciu klucza {keyId}");
-            if (unlockedField.KeyId == keyId && unlockedField.BlockedStatus)
-            {
-                unlockedField.SetBlockedStatus(false);
-                Console.WriteLine($"Pole na pozycji {position} zostało odblokowane!");
-            }
-            else
-            {
-                Console.WriteLine($"Nie można odblokować pola. Nieprawidłowy klucz lub pole jest już odblokowane.");
-            }
+            unlockedField.SetBlockedStatus(false);
+            Console.WriteLine($"Field at {position} has been unlocked with key {keyId}.");
+            return true;
         }
-        else
-        {
-            Console.WriteLine($"Brak pola do odblokowania na pozycji {position}.");
-        }
+
+        return false;
     }
 
-    // Dodanie pola zablokowanego
     public static void AddBlockedField(Dictionary<Point, List<IMappable>> fields, Point position)
     {
         if (!fields.ContainsKey(position))
@@ -77,7 +59,6 @@ public static class MapRules
         fields[position].Add(new BlockedField(position));
     }
 
-    // Dodanie pola odblokowywalnego
     public static void AddUnlockedField(Dictionary<Point, List<IMappable>> fields, Point position, int keyId, string accessCode)
     {
         if (!fields.ContainsKey(position))
@@ -87,7 +68,6 @@ public static class MapRules
         fields[position].Add(new UnlockedField(position, keyId, accessCode));
     }
 
-    // Dodanie klucza
     public static void AddKey(Dictionary<Point, List<IMappable>> fields, Point position, int keyId)
     {
         if (!fields.ContainsKey(position))
@@ -97,10 +77,9 @@ public static class MapRules
 
         var key = new Key(position, keyId);
         fields[position].Add(key);
-        Console.WriteLine($"Klucz o ID {keyId} został dodany na pozycję {position}.");
+        Console.WriteLine($"Key with ID {keyId} added at {position}.");
     }
 
-    // Dodanie eliksiru
     public static void AddPotion(Dictionary<Point, List<IMappable>> fields, Point position, string effect)
     {
         if (!fields.ContainsKey(position))
@@ -110,19 +89,17 @@ public static class MapRules
 
         var potion = new Potions(position, effect);
         fields[position].Add(potion);
+        Console.WriteLine($"Potion with effect '{effect}' added at {position}.");
     }
 
-    // Sprawdzenie obiektów na danej pozycji
     public static bool TryGetField(Dictionary<Point, List<IMappable>> fields, Point point, out List<IMappable> mappableObjects)
     {
-        Console.WriteLine($"Sprawdzanie obiektów na pozycji {point}"); // Debugowanie
         if (fields.TryGetValue(point, out mappableObjects))
         {
-            Console.WriteLine($"Obiekty na pozycji {point}: {string.Join(", ", mappableObjects.Select(o => o.GetType().Name))}");
             return true;
         }
 
         mappableObjects = null;
         return false;
-    } 
+    }
 }

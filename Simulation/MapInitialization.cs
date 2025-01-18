@@ -20,22 +20,19 @@ public static class GameInitialization
         bigMap.AddBlockedField(new Point(7, 8));
         bigMap.AddBlockedField(new Point(7, 7));
         bigMap.AddBlockedField(new Point(8, 7));
-        //bigMap.AddBlockedField(new Point(9, 7));
-
 
         bigMap.AddBlockedField(new Point(9, 2));
         bigMap.AddBlockedField(new Point(8, 2));
         bigMap.AddBlockedField(new Point(7, 2));
-        //bigMap.AddBlockedField(new Point(7, 1));
 
         bigMap.AddUnlockedField(new Point(7, 9), 1, "1");
         bigMap.AddKey(new Point(4, 2), 1);
 
-        bigMap.AddUnlockedField(new Point(7, 0), 4, "");
+        bigMap.AddUnlockedField(new Point(7, 0), 4, "1111");
         bigMap.AddKey(new Point(8, 8), 4);
 
-
         bigMap.AddPotion(new Point(5, 5), "DoubleMovement");
+
         // Dodaj followera
         var triggerPoint = new Point(8, 9); // Punkt, którego odblokowanie aktywuje followera
         var follower = new Follower("Wercia", triggerPoint);
@@ -45,11 +42,11 @@ public static class GameInitialization
         // Dodaj triggerujące pole na mapie
         bigMap.AddTriggerPoint(triggerPoint);
 
-        //Dodanie NPC na mapie
-        var Olamo = new Npc("OlaMo", "Hej! Chyba widziałam jak Weronika wchodzi do tego miejsca i wpisuje 1 na drzwiach..", 'O');
+        // Dodanie NPC na mapie
+        var Olamo = new Npc("Olamo", "Hej! Chyba widziałam jak Weronika wchodzi do tego miejsca i wpisuje 1 na drzwiach..", 'O');
         Olamo.InitMapAndPosition(bigMap, new Point(4, 4));
 
-        //DRUGA MAPA
+        // DRUGA MAPA
         secondMap.AddBlockedField(new Point(0, 2));
         secondMap.AddBlockedField(new Point(1, 2));
         secondMap.AddBlockedField(new Point(2, 2));
@@ -77,11 +74,9 @@ public static class GameInitialization
         secondMap.AddUnlockedField(new Point(7, 8), 3, "11");
         secondMap.AddKey(new Point(5, 5), 3);
 
-
         // Dodaj pole teleportacyjne na BigMap
         var teleportToSecond = new TeleportField(new Point(9, 0), "SecondMap", new Point(0, 0));
         teleportToSecond.InitMapAndPosition(bigMap, new Point(9, 0));
-
 
         var npc2 = new Npc("RandomGuy", "Weź ten klucz jak chcesz przejść dalej. Hasło to suma kwadratów 4 i 5", 'R');
         npc2.InitMapAndPosition(secondMap, new Point(9, 0));
@@ -104,10 +99,10 @@ public static class GameInitialization
 
         // Rejestracja map
         var maps = new Dictionary<string, Map>
-    {
-        { "BigMap", bigMap },
-        { "SecondMap", secondMap }
-    };
+        {
+            { "BigMap", bigMap },
+            { "SecondMap", secondMap }
+        };
 
         return (bigMap, secondMap, player, maps, follower);
     }
