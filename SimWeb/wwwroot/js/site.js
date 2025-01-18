@@ -23,7 +23,7 @@ document.addEventListener('keydown', (event) => {
             buttonId = 'collect-key';
             break;
         case 'e':
-            buttonId = 'open-lock';
+            buttonId = 'unlock-field';
             break;
         case 'i':
             buttonId = 'open-inventory';

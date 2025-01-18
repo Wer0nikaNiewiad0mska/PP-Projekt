@@ -121,18 +121,24 @@ public class GameModel : PageModel
 
     public IActionResult OnPostCollectKey()
     {
-        DebugMessages.Add("Próba zebrania klucza...");
-        // Logika zbierania klucza, na podstawie pobliskich pól
+        DebugMessages.Add("Wywołano metodę OnPostCollectKey.");
+
+        // Pobierz punkty w pobliżu gracza
         var adjacentPoints = GetAdjacentPoints();
+
         foreach (var point in adjacentPoints)
         {
+            DebugMessages.Add($"Sprawdzam punkt {point}...");
+
             if (_gameSession.IsKey(point))
             {
-                DebugMessages.Add($"Zebrano klucz z pozycji {point}.");
+                DebugMessages.Add($"Znaleziono klucz na pozycji {point}. Próba zebrania...");
+                _gameSession.Player.InteractKey(_gameSession.CurrentMap); // Zbieranie klucza
                 return RedirectToPage();
             }
         }
-        DebugMessages.Add("Nie znaleziono klucza w pobli?u.");
+
+        DebugMessages.Add("Nie znaleziono klucza w pobliżu.");
         return RedirectToPage();
     }
 
