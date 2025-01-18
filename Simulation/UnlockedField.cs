@@ -32,20 +32,15 @@ public class UnlockedField : IMappable
     // Konstruktor przyjmujący pozycję, identyfikator klucza i kod dostępu
     public UnlockedField(Point position, int keyId, string accessCode)
     {
-        if (string.IsNullOrWhiteSpace(accessCode))
-            throw new ArgumentNullException(nameof(accessCode), "Kod dostępu nie może być pusty lub składać się wyłącznie z białych znaków.");
-
         Position = position; // Punkt jest strukturą, więc nie wymaga sprawdzania null
-        KeyId = keyId > 0 ? keyId : throw new ArgumentException("KeyId musi być większy od 0", nameof(keyId));
-        AccessCode = accessCode;
+        KeyId = keyId;
+        AccessCode = accessCode ?? throw new ArgumentNullException(nameof(accessCode), "Kod dostępu nie może być pusty.");
     }
 
     // Implementacja metody InitMapAndPosition
     public void InitMapAndPosition(Map map, Point point)
     {
-        if (map == null)
-            throw new ArgumentNullException(nameof(map), "Mapa nie może być null.");
-
+        if (map == null) throw new ArgumentNullException(nameof(map));
         if (!map.Exist(point))
             throw new ArgumentOutOfRangeException(nameof(point), "Punkt nie istnieje na mapie.");
 
@@ -58,9 +53,6 @@ public class UnlockedField : IMappable
     // Metoda odblokowująca pole przy użyciu kodu dostępu, ale tylko wtedy, gdy mamy klucz
     public void Unlock(string code, InventorySystem inventory)
     {
-        if (inventory == null)
-            throw new ArgumentNullException(nameof(inventory), "Ekwipunek nie może być null.");
-
         // Sprawdzenie, czy gracz ma klucz
         var hasKey = inventory.InventoryRecords.Any(record => record.InventoryItem is Key key && key.KeyId == KeyId);
         if (!hasKey)
@@ -70,9 +62,9 @@ public class UnlockedField : IMappable
         }
 
         // Jeśli gracz ma klucz, sprawdzamy kod dostępu
-        if (string.Equals(code, AccessCode, StringComparison.Ordinal))
+        if (code == AccessCode)
         {
-            SetBlockedStatus(false);
+            BlockedStatus = false;
             Console.WriteLine($"Pole {Position} zostało odblokowane.");
         }
         else
@@ -80,14 +72,9 @@ public class UnlockedField : IMappable
             Console.WriteLine($"Nieprawidłowy kod dostępu dla pola {Position}.");
         }
     }
-
     public void SetBlockedStatus(bool status)
     {
-        if (BlockedStatus != status)
-        {
-            BlockedStatus = status;
-            Console.WriteLine($"Pole na pozycji {Position} zostało {(status ? "zablokowane" : "odblokowane")}.");
-        }
+        BlockedStatus = status;
     }
 
     public override string ToString()

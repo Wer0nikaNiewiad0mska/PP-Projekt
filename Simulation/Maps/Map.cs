@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Simulation.Maps;
+using Simulation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -61,26 +63,7 @@ public abstract class Map
             Console.WriteLine($"Pozycja {position} jest teraz pusta i została usunięta z mapy.");
         }
     }
-    public bool TryGetField(Point point, out List<IMappable> mappableObjects)
-    {
-        if (_fields.TryGetValue(point, out var objects))
-        {
-            mappableObjects = objects;
-            return true;
-        }
 
-        mappableObjects = null;
-        return false;
-    }
-    public bool IsTeleport(Point position)
-    {
-        // Sprawdź, czy na pozycji znajduje się teleport
-        if (_fields.TryGetValue(position, out var objects))
-        {
-            return objects.OfType<TeleportField>().Any();
-        }
-        return false;
-    }
     public List<IMappable> At(int x, int y) => At(new Point(x, y));
 
     public List<IMappable> At(Point position)
@@ -96,7 +79,6 @@ public abstract class Map
         Remove(mappable, p);
         Add(mappable, pn);
     }
-
     public void AddTriggerPoint(Point point)
     {
         if (!Exist(point))
@@ -110,6 +92,8 @@ public abstract class Map
         return _triggerPoints.Contains(point);
     }
 
+    public abstract bool TryGetField(Point point, out List<IMappable> mappableObjects);
+
     public virtual bool Exist(Point p) => _map.Contains(p);
 
     public abstract Point Next(Point p, Direction d);
@@ -117,8 +101,9 @@ public abstract class Map
     public abstract bool IsBlocked(Point position);
 
     public abstract bool IsUnlockable(Point position);
-    public abstract bool IsPotion(Point position);
     public abstract bool IsKey(Point position);
-
+    public abstract bool IsPotion(Point position);
+    public abstract bool IsPlayer(Point position);
     public abstract bool IsNpc(Point position);
+    public abstract bool IsTeleport(Point position);
 }

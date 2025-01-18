@@ -17,7 +17,7 @@ public class GameSession
     public Point PlayerPosition => _player.Position;
     public Map CurrentMap => _currentMap; // Dostęp do obecnej mapy
     public Dictionary<string, Map> Maps => _maps; // Dostęp do wszystkich map
-   
+
 
     public void Initialize(Map initialMap, Player player, Dictionary<string, Map> maps, Follower follower)
     {

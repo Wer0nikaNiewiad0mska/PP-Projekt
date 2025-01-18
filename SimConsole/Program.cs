@@ -12,45 +12,160 @@ internal class Program
     {
         try
         {
-            var (bigMap, secondMap, player, maps, follower) = GameInitialization.InitializeGame();
-            var session = new GameSession();
-            session.Initialize(bigMap, player, maps, follower);
+            // Tworzymy mapę
+            var map = new BigMap(10, 10);
+
+            // Dodajemy zablokowane pola
+            map.AddBlockedField(new Point(1, 1));
+            map.AddBlockedField(new Point(1, 2));
+            map.AddBlockedField(new Point(1, 3));
+            map.AddBlockedField(new Point(3, 1));
+            map.AddBlockedField(new Point(3, 2));
+            map.AddBlockedField(new Point(3, 3));
+            map.AddBlockedField(new Point(2, 1));
+
+            var triggerPoint = new Point(8, 9); // Punkt, którego odblokowanie aktywuje followera
+            var follower = new Follower("Wercia", triggerPoint);
+            map.Add(follower, new Point(9, 9)); // Początkowa pozycja followera
+            follower.InitMapAndPosition(map, new Point(9, 9));
+
+            // Dodaj triggerujące pole na mapie
+            map.AddTriggerPoint(triggerPoint);
+
+
+            //Dodajemy potki
+            map.AddPotion(new Point(5, 5), "DoubleMovement");
+            map.AddPotion(new Point(8, 8), "DoubleMovement");
+
+            // Dodajemy odblokowywane pola i klucze
+            map.AddUnlockedField(new Point(2, 3), 1, "1111"); // Pole wymagające klucza o ID 1 i kodu "1234"
+            map.AddKey(new Point(6, 6), 1);
+            Console.WriteLine("Klucz 1 został dodany na mapę na pozycję (6, 6).");
+
+            map.AddUnlockedField(new Point(4, 4), 2, "1111"); // Pole wymagające klucza o ID 2 i kodu "5678"
+            map.AddKey(new Point(2, 2), 2);
+            Console.WriteLine("Klucz 2 został dodany na mapę na pozycję (2, 2).");
+
+            // Tworzymy wizualizację mapy
+            var visualizer = new MapVisualizer(map);
+
+            // Tworzymy gracza i NPC + ich pozycje na mapie
+            var player = new Player("Hero");
+            var npc1 = new Npc("Npc1", "Użyj tego klucza aby otworzyć pole Y, które blokuje ostatni klucz.", 'n');
+            var npc2 = new Npc("Npc2", "Uważaj, nieznajomy.");
+
+            player.InitMapAndPosition(map, new Point(0, 0));
+            npc1.InitMapAndPosition(map, new Point(7, 6));
+            npc2.InitMapAndPosition(map, new Point(3, 6));
 
             // Główna pętla gry
-            RunGameLoop(session, follower);
+            Console.WriteLine("Użyj W/A/S/D do poruszania się. Naciśnij Q aby zebrać klucz, E aby odblokować pole, lub Enter aby zakończyć.");
+            var debugMessages = new List<string>();
+
+            while (true)
+            {
+                try
+                {
+                    Console.Clear();
+                    visualizer.Draw();
+
+                    // Wyświetl komunikaty debugujące poniżej mapy
+                    Console.WriteLine("\n=== Komunikaty debugowania ===");
+                    foreach (var message in debugMessages)
+                    {
+                        Console.WriteLine(message);
+                    }
+                    debugMessages.Clear(); // Czyszczenie komunikatów na koniec iteracji
+
+                    // Sprawdzanie NPC w pobliżu gracza
+                    foreach (var npc in new[] { npc1, npc2 })
+                    {
+                        var dialogue = npc.CheckAndSpeak(player.Position);
+                        if (!string.IsNullOrEmpty(dialogue))
+                        {
+                            debugMessages.Add(dialogue);
+                        }
+                    }
+
+                    // Obsługa wejścia użytkownika
+                    var input = Console.ReadKey(true).Key;
+
+                    if (input == ConsoleKey.Enter)
+                    {
+                        Console.WriteLine("Symulacja się zakończyła. Do zobaczenia!");
+                        break;
+                    }
+
+                    if (input == ConsoleKey.Q)
+                    {
+                        debugMessages.Add("Próba zebrania klucza...");
+                        player.InteractKey(map);
+                    }
+                    else if (input == ConsoleKey.E)
+                    {
+                        debugMessages.Add("Próba odblokowania pola...");
+                        Console.WriteLine("Wprowadź kod odblokowujący pole, a następnie naciśnij enter:");
+                        string accessCode = Console.ReadLine();
+                        player.InteractField(map, accessCode, follower);
+                    }
+                    else if (input == ConsoleKey.U)
+                    {
+                        debugMessages.Add("Próba zebrania eliksiru...");
+                        player.InteractPotion(map);
+                    }
+                    else if (input == ConsoleKey.I)
+                    {
+                        Console.WriteLine("Dostępne eliksiry w ekwipunku:");
+                        foreach (var record in player.Inventory.InventoryRecords.Where(r => r.InventoryItem is Potions))
+                        {
+                            var potion = (Potions)record.InventoryItem;
+                            Console.WriteLine($"- {potion.Effect} (ilość: {record.Quantity})");
+                        }
+
+                        Console.WriteLine("Wprowadź nazwę efektu eliksiru do użycia:");
+                        string effect = Console.ReadLine();
+                        player.UsePotion(effect); // Wywołanie metody `UsePotion`
+                    }
+                    else
+                    {
+                        Direction? direction = input switch
+                        {
+                            ConsoleKey.W => Direction.Up,
+                            ConsoleKey.A => Direction.Left,
+                            ConsoleKey.S => Direction.Down,
+                            ConsoleKey.D => Direction.Right,
+                            _ => null
+                        };
+
+                        if (direction.HasValue)
+                        {
+                            // Zapamiętaj poprzednią pozycję gracza
+                            Point previousPlayerPosition = player.Position;
+
+                            // Porusz gracza
+                            player.Go(direction.Value);
+
+                            // Sprawdź aktywację followera
+                            if (follower.TriggerPoint == player.Position)
+                            {
+                                follower.ActivateFollower(player.Position);
+                            }
+                        }
+                        else
+                        {
+                            debugMessages.Add("Nieprawidłowy klawisz. Użyj W/A/S/D.");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    debugMessages.Add($"Błąd: {ex.Message}");
+                }
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Błąd: {ex.Message}");
-        }
-    }
-
-    private static void RunGameLoop(GameSession session, Follower follower)
-    {
-        Console.WriteLine("Użyj W/A/S/D do poruszania się. Naciśnij Enter aby zakończyć.");
-        while (true)
-        {
-            // Odśwież mapę i wyświetl widok
-            session.UpdateMapView();
-
-            Console.WriteLine("Pozycja gracza: " + session.PlayerPosition);
-
-            var input = Console.ReadKey(true).Key;
-            if (input == ConsoleKey.Enter) break;
-
-            Direction? direction = input switch
-            {
-                ConsoleKey.W => Direction.Up,
-                ConsoleKey.A => Direction.Left,
-                ConsoleKey.S => Direction.Down,
-                ConsoleKey.D => Direction.Right,
-                _ => null
-            };
-
-            if (direction.HasValue)
-            {
-                session.MovePlayer(direction.Value);
-            }
+            Console.WriteLine($"Pojawił się błąd: {ex.Message}");
         }
     }
 }
