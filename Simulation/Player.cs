@@ -4,11 +4,8 @@ namespace Simulation;
 
 public class Player : Creature
 {
-    private readonly HashSet<string> _effects = new(); // Lista aktywnych efektów
     public InventorySystem Inventory { get; } = new(); // Ekwipunek gracza
     public override char Symbol => 'P'; // Stały symbol gracza
-
-    private readonly HashSet<int> _keys = new();
     public Player(string name) : base(name) { }
 
     public void Go(Direction direction)
@@ -20,20 +17,7 @@ public class Player : Creature
 
         Point newPosition;
 
-        // Sprawdzenie, czy efekt "DoubleMovement" jest aktywny
-        if (_effects.Contains("DoubleMovement"))
-        {
-            Console.WriteLine("Efekt 'DoubleMovement' aktywny. Ruch podwójny.");
-            newPosition = Map.Next(Position, direction);
-            newPosition = Map.Next(newPosition, direction);
-            _effects.Remove("DoubleMovement"); // Usuń efekt po użyciu
-        }
-        else
-        {
-            Console.WriteLine("Efekt 'DoubleMovement' nieaktywny. Ruch pojedynczy.");
-            newPosition = Map.Next(Position, direction);
-        }
-        Console.WriteLine($"Nowa pozycja wyliczona: {newPosition}");
+        newPosition = Map.Next(Position, direction);
 
         if (!CanMoveTo(Map, newPosition))
         {
@@ -49,45 +33,6 @@ public class Player : Creature
         Console.WriteLine($"Nowa pozycja gracza: {Position}");
     }
 
-    public void InteractField(BigMap map, string accessCode, Follower follower)
-    {
-        var adjacentPoints = GetAdjacentPoints();
-
-        foreach (var point in adjacentPoints)
-        {
-            if (!map.TryGetField(point, out var objectsAtPoint))
-                continue;
-
-            var unlockedField = objectsAtPoint.OfType<UnlockedField>().FirstOrDefault();
-            if (unlockedField != null)
-            {
-                if (unlockedField.BlockedStatus && _keys.Contains(unlockedField.KeyId))
-                {
-                    if (accessCode == unlockedField.AccessCode)
-                    {
-                        unlockedField.SetBlockedStatus(false);
-                        Console.WriteLine($"Pole {point} zostało odblokowane!");
-                        // Sprawdź, czy to pole aktywuje followera
-                        if (map.IsTriggerPoint(point))
-                        {
-                            follower.ActivateFollower(point);
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Nieprawidłowy kod dostępu dla pola {point}.");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"Nie możesz odblokować tego pola. Czy masz odpowiedni klucz?");
-                }
-                return;
-            }
-        }
-
-        Console.WriteLine("Nie znaleziono pola do odblokowania w pobliżu.");
-    }
 
     public void InteractWithField(GameSession session, Map currentMap, Dictionary<string, Map> maps)
     {
@@ -110,84 +55,7 @@ public class Player : Creature
             Console.WriteLine("Brak teleportu na bieżącej pozycji.");
         }
     }
-    public void InteractKey(Map map)
-    {
-        var adjacentPoints = GetAdjacentPoints();
-
-        foreach (var point in adjacentPoints)
-        {
-            if (!map.TryGetField(point, out var objectsAtPoint))
-                continue;
-
-            var key = objectsAtPoint.OfType<Key>().FirstOrDefault();
-            if (key != null)
-            {
-                if (_keys.Add(key.KeyId))
-                {
-                    map.Remove(key, point);
-                    objectsAtPoint.Remove(key);
-                    Console.WriteLine($"Podniosłeś klucz {key.KeyId} i został on usunięty z mapy!");
-                }
-                else
-                {
-                    Console.WriteLine($"Masz już ten klucz, nie można go podnieść ponownie.");
-                }
-                return;
-            }
-        }
-
-        Console.WriteLine("Nie znaleziono klucza w pobliżu.");
-    }
-
-    public void InteractPotion(Map map)
-    {
-        var adjacentPoints = GetAdjacentPoints();
-
-        foreach (var point in adjacentPoints)
-        {
-            if (!map.TryGetField(point, out var mappableObjects))
-                continue;
-
-            var potion = mappableObjects.OfType<Potions>().FirstOrDefault();
-            if (potion != null)
-            {
-                Inventory.AddItem(potion, 1);
-                map.Remove(potion, point);
-                mappableObjects.Remove(potion);
-                Console.WriteLine($"Podniosłeś eliksir o efekcie '{potion.Effect}'!");
-                return;
-            }
-        }
-
-        Console.WriteLine("Nie znaleziono eliksiru w pobliżu.");
-    }
-
-    public void UsePotion(string effect)
-    {
-        if (string.IsNullOrEmpty(effect))
-        {
-            Console.WriteLine("Nazwa efektu nie może być pusta.");
-            return;
-        }
-
-        var potionRecord = Inventory.InventoryRecords
-            .FirstOrDefault(record => record.InventoryItem is Potions potion && potion.Effect == effect);
-
-        if (potionRecord == null)
-        {
-            Console.WriteLine($"Nie posiadasz eliksiru o efekcie: {effect}.");
-            return;
-        }
-
-        Console.WriteLine($"Aktywacja efektu: {effect}");
-        _effects.Add(effect);
-
-        potionRecord.ReduceQuantity(1);
-        if (potionRecord.Quantity <= 0)
-        {
-            Inventory.InventoryRecords.Remove(potionRecord);
-        }
-    }
+    
 
     private IEnumerable<Point> GetAdjacentPoints()
     {

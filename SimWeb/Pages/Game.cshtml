@@ -21,25 +21,13 @@
                 <button id="move-right" type="submit" class="btn btn-control">D</button>
             </form>
         </div>
-        <form method="post" asp-page-handler="CollectKey">
-            <button id="collect-key" type="submit" class="btn btn-primary">Zbierz Klucz</button>
-        </form>
-        <form method="post" asp-page-handler="UsePotion">
-            <button id="open-inventory" type="submit" class="btn btn-primary">Użyj Eliksiru</button>
-        </form>
-        <form method="post" asp-page-handler="UnlockField">
-            <input type="text" name="accessCode" id="accessCode" class="input-text" placeholder="Kod odblokowujący" required />
-            <button id="unlock-field" type="submit" class="btn btn-secondary">Odblokuj Pole</button>
-        </form>
         <form method="post" asp-page-handler="ActivateFollower">
             <button id="activate-follower" type="submit" class="btn btn-secondary">Aktywuj Followera</button>
         </form>
-        <form method="post" asp-page-handler="CollectPotion">
-            <button id="collect-potion" type="submit" class="btn btn-primary">Zbierz Eliksir</button>
-        </form>
+        
     </div>
     <!-- Mapa gry -->
-    <div id="map-container" class="map @Model.CurrentMapName.ToLower()">
+    <div id="map-container" class="map @Model.CurrentMapName.ToLower()" >
         @for (int y = 0; y < map.Count; y++) // Iteracja po wierszach
         {
             <div class="row">
@@ -53,15 +41,6 @@
                                 break;
                             case "blocked":
                                 <img src="/img/blocked.png" alt="Blocked" class="img" />
-                                break;
-                            case "potion":
-                                <img src="/img/potion.png" alt="Potion" class="img" />
-                                break;
-                            case "unlockable":
-                                <img src="/img/unblocked.png" alt="Unlockable" class="img" />
-                                break;
-                            case "key":
-                                <img src="/img/key1.png" alt="Key" class="img" />
                                 break;
                             case "follower":
                                 <img src="/img/wercia.png" alt="Follower" class="img" />

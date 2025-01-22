@@ -30,7 +30,7 @@ public class GameModel : PageModel
             var row = new List<string>();
             for (int x = 0; x < _gameSession.CurrentMap.SizeX; x++)
             {
-                var position = new Simulation.Point(x, y); // U¿ycie Simulation.Point
+                var position = new Simulation.Point(x, y); // Uzycie Simulation.Point
 
                 string cellContent = "empty";
 
@@ -44,14 +44,9 @@ public class GameModel : PageModel
                         cellContent = $"npc:{npc.Name.ToLower()}"; // Dodajemy imiê NPC jako identyfikator
                     }
                 }
-                else if (_gameSession.IsPotion(position))
-                    cellContent = "potion";
-                else if (_gameSession.IsUnlockable(position))
-                    cellContent = "unlockable"; // Powinno być przed IsBlocked
+                
                 else if (_gameSession.IsBlocked(position))
                     cellContent = "blocked";
-                else if (_gameSession.IsKey(position))
-                    cellContent = "key";
                 else if (_gameSession.IsTeleport(position))
                     cellContent = "teleport";
                 else if (_gameSession.IsFollower(position))
@@ -119,65 +114,7 @@ public class GameModel : PageModel
         return RedirectToPage();
     }
 
-    public IActionResult OnPostCollectKey()
-    {
-        DebugMessages.Add("Wywołano metodę OnPostCollectKey.");
-
-        // Pobierz punkty w pobliżu gracza
-        var adjacentPoints = GetAdjacentPoints();
-
-        foreach (var point in adjacentPoints)
-        {
-            DebugMessages.Add($"Sprawdzam punkt {point}...");
-
-            if (_gameSession.IsKey(point))
-            {
-                DebugMessages.Add($"Znaleziono klucz na pozycji {point}. Próba zebrania...");
-                _gameSession.Player.InteractKey(_gameSession.CurrentMap); // Zbieranie klucza
-                return RedirectToPage();
-            }
-        }
-
-        DebugMessages.Add("Nie znaleziono klucza w pobliżu.");
-        return RedirectToPage();
-    }
-
-    public IActionResult OnPostUsePotion(string potionEffect)
-    {
-        if (string.IsNullOrEmpty(potionEffect))
-        {
-            DebugMessages.Add("Nie podano efektu eliksiru do u¿ycia.");
-            return RedirectToPage();
-        }
-
-        DebugMessages.Add($"Próba u¿ycia eliksiru: {potionEffect}...");
-        _gameSession.Player.UsePotion(potionEffect); // Wywo³aj u¿ycie eliksiru
-        return RedirectToPage(); // Prze³aduj stronê po u¿yciu eliksiru
-    }
-
-    public IActionResult OnPostUnlockField(string accessCode)
-    {
-        if (!string.IsNullOrEmpty(accessCode))
-        {
-            DebugMessages.Add("Próba odblokowania pola...");
-            // Logika odblokowania pola, na podstawie pobliskich punktów
-            var adjacentPoints = GetAdjacentPoints();
-            foreach (var point in adjacentPoints)
-            {
-                if (_gameSession.IsUnlockable(point))
-                {
-                    DebugMessages.Add($"Pole odblokowane na pozycji {point} przy u?yciu kodu: {accessCode}.");
-                    return RedirectToPage();
-                }
-            }
-            DebugMessages.Add("Nie znaleziono pola do odblokowania w pobli?u.");
-        }
-        else
-        {
-            DebugMessages.Add("Nie podano kodu dost?pu.");
-        }
-        return RedirectToPage();
-    }
+    
 
     public IActionResult OnPostInteractWithNpc()
     {
@@ -204,26 +141,6 @@ public class GameModel : PageModel
         return RedirectToPage();
     }
 
-    public IActionResult OnPostCollectPotion()
-    {
-        DebugMessages.Add("Próba zebrania eliksiru...");
-
-        // Pobierz punkty w pobli¿u gracza
-        var adjacentPoints = GetAdjacentPoints();
-
-        foreach (var point in adjacentPoints)
-        {
-            if (_gameSession.IsPotion(point))
-            {
-                DebugMessages.Add($"Zebrano eliksir z pozycji {point}.");
-                _gameSession.Player.InteractPotion(_gameSession.CurrentMap);
-                return RedirectToPage();
-            }
-        }
-
-        DebugMessages.Add("Nie znaleziono eliksiru w pobli¿u.");
-        return RedirectToPage();
-    }
 
     public IActionResult OnPostInteractWithTeleport()
     {

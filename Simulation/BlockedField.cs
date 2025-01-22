@@ -33,11 +33,6 @@ public class BlockedField : IMappable
         Console.WriteLine($"Blokowane pole zostało umieszczone na pozycji {point}.");
     }
 
-    public void Unlock(string code)
-    {
-        // Opcjonalne zachowanie dla pola blokowanego bez potrzeby kodu
-        Console.WriteLine("To pole nie może być odblokowane kodem.");
-    }
 
     // Metoda pomocnicza do debugowania
     public override string ToString()

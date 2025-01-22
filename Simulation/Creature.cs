@@ -60,16 +60,6 @@ public abstract class Creature : IMappable
         Console.WriteLine($"{Name} został umieszczony na mapie na pozycji {position}.");
     }
 
-    // Usunięcie istoty z mapy
-    public void RemoveFromMap()
-    {
-        if (Map == null)
-            throw new InvalidOperationException("Ta postać nie znajduje się na mapie.");
-
-        Map.Remove(this, Position);
-        Console.WriteLine($"{Name} został usunięty z pozycji {Position}.");
-        Map = null;
-    }
 
     public bool CanMoveTo(Map map, Point newPosition)
     {
@@ -89,27 +79,6 @@ public abstract class Creature : IMappable
                 if (obj is Npc npc)
                 {
                     Console.WriteLine($"Ruch zablokowany! Pole {newPosition} zajęte przez NPC {npc.Name}.");
-                    return false;
-                }
-
-                // Pole zajęte przez klucz
-                if (obj is Key)
-                {
-                    Console.WriteLine($"Ruch zablokowany! Pole {newPosition} zajęte przez klucz.");
-                    return false;
-                }
-
-                // Pole zajęte przez eliksir
-                if (obj is Potions)
-                {
-                    Console.WriteLine($"Ruch zablokowany! Pole {newPosition} zajęte przez eliksir.");
-                    return false;
-                }
-
-                // Pole zablokowane przez `UnlockedField`
-                if (obj is UnlockedField field && field.BlockedStatus)
-                {
-                    Console.WriteLine($"Ruch zablokowany! Pole {newPosition} jest zablokowane (Y).");
                     return false;
                 }
 

@@ -1,7 +1,10 @@
 ﻿@page
 @model SimWeb.Pages.IndexModel
 
-
+@{
+    ViewData["Title"] = "Home";
+    
+}
 
 <main class="main-content">
     <section class="trip-section">
@@ -11,7 +14,7 @@
             </div>
             <div class="trip-details">
                 <h2>Fabuła Gry</h2>
-                <p>Grupa znajomych miała spotkać się na miasteczku studenckim, ale jedna osoba - Weronika, zgubiła się (ma słabą orientację w terenie). Tobie przypadło zadanie odnalezienia Weroniki i dołączenia do reszty grupy.</p>
+                <p>Grupa znajomych miała sie spotkać, ale jedna osoba - Weronika, zgubiła się (ma słabą orientację w terenie). Tobie przypadło zadanie odnalezienia Weroniki i dołączenia do reszty grupy.</p>
                 <p class="trip-date"> Znajdź Weronikę, a następnie udajcie się do reszty znajomych. </p>
                 <p class="trip-location">Gra została wykonana z wykorzystaniem programowania obiektowego w C# i Razor Pages, w ramach kursu Pracownia Programowania 3.</p>
                 
@@ -27,10 +30,8 @@
             <div class="trip-details">
                 <h2>Jak grać?</h2>
                 <p>W/A/S/D - Poruszanie się po mapie</p>
-                <p>E - Zbieranie kluczy</p>
-                <p>Q - Otwieranie zablokowanych miejsc</p>
-                <p>U - użycie eliksirów</p>
-                <p>I - Interakcje z inwentarzem</p>
+                <p>R - interakcje z followerem (postacią śledzącą)</p>
+                <p>I - Interakcje z inwentarzem(zamysł)</p>
                 <p class="trip-date">Po lewo znajduje się postać, którą można się poruszać.</p>
                 <p>Ewentualnie, można poruszać się za pomocą przycisków znajdujących się na ekranie.</p>
             </div>

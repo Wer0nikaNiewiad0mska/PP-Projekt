@@ -17,21 +17,32 @@ public static class GameInitialization
         var player = new Player("Hero");
 
         // Ustawienia mapy BigMap
-        bigMap.AddBlockedField(new Point(7, 8));
-        bigMap.AddBlockedField(new Point(7, 7));
-        bigMap.AddBlockedField(new Point(8, 7));
+        bigMap.AddBlockedField(new Point(0, 1));
+        bigMap.AddBlockedField(new Point(1,1));
+        bigMap.AddBlockedField(new Point(2,1));
+        bigMap.AddBlockedField(new Point(6, 8));
+        bigMap.AddBlockedField(new Point(6, 7));
+        bigMap.AddBlockedField(new Point(6, 6));
+        bigMap.AddBlockedField(new Point(6, 5));
+        bigMap.AddBlockedField(new Point(6, 4));
+        bigMap.AddBlockedField(new Point(6, 3));
+        bigMap.AddBlockedField(new Point(6, 2));
+        bigMap.AddBlockedField(new Point(6, 1));
+        bigMap.AddBlockedField(new Point(6, 0));
 
+        bigMap.AddBlockedField(new Point(8, 8));
+        bigMap.AddBlockedField(new Point(9, 8));
+
+        bigMap.AddBlockedField(new Point(8, 6));
+
+        bigMap.AddBlockedField(new Point(7, 5));
+        bigMap.AddBlockedField(new Point(8, 5));
+        
+        bigMap.AddBlockedField(new Point(8, 3));
         bigMap.AddBlockedField(new Point(9, 2));
         bigMap.AddBlockedField(new Point(8, 2));
-        bigMap.AddBlockedField(new Point(7, 2));
+        
 
-        bigMap.AddUnlockedField(new Point(7, 9), 1, "1");
-        bigMap.AddKey(new Point(4, 2), 1);
-
-        bigMap.AddUnlockedField(new Point(7, 0), 4, "1111");
-        bigMap.AddKey(new Point(8, 8), 4);
-
-        bigMap.AddPotion(new Point(5, 5), "DoubleMovement");
 
         // Dodaj followera
         var triggerPoint = new Point(8, 9); // Punkt, którego odblokowanie aktywuje followera
@@ -43,23 +54,38 @@ public static class GameInitialization
         bigMap.AddTriggerPoint(triggerPoint);
 
         // Dodanie NPC na mapie
-        var Olamo = new Npc("Olamo", "Hej! Chyba widziałam jak Weronika wchodzi do tego miejsca i wpisuje 1 na drzwiach..", 'O');
+        var Olamo = new Npc("Olamo", "Hej! Widziałam jak Weronika wchodzi do tego labiryntu..", 'O');
         Olamo.InitMapAndPosition(bigMap, new Point(4, 4));
 
+        var npc11 = new Npc("Student1", "Kiedy zaczniesz uczyć się do sesji?", 'S');
+        npc11.InitMapAndPosition(bigMap, new Point(1, 2));
+
+        var npc12 = new Npc("Student2", "Jak tylko przestanę płakać", 's');
+        npc12.InitMapAndPosition(bigMap, new Point(0, 2));
+
         // DRUGA MAPA
-        secondMap.AddBlockedField(new Point(0, 2));
-        secondMap.AddBlockedField(new Point(1, 2));
+        secondMap.AddBlockedField(new Point(0, 3)); 
+        secondMap.AddBlockedField(new Point(1, 3));
+        secondMap.AddBlockedField(new Point(2, 3));
         secondMap.AddBlockedField(new Point(2, 2));
         secondMap.AddBlockedField(new Point(3, 2));
         secondMap.AddBlockedField(new Point(4, 2));
         secondMap.AddBlockedField(new Point(5, 2));
         secondMap.AddBlockedField(new Point(6, 2));
         secondMap.AddBlockedField(new Point(7, 2));
+        secondMap.AddBlockedField(new Point(9, 2));
         secondMap.AddBlockedField(new Point(7, 3));
         secondMap.AddBlockedField(new Point(7, 5));
-        secondMap.AddBlockedField(new Point(7, 6));
-        secondMap.AddBlockedField(new Point(7, 7));
-        secondMap.AddBlockedField(new Point(7, 9));
+        secondMap.AddBlockedField(new Point(8, 5));
+        secondMap.AddBlockedField(new Point(9, 5));
+        secondMap.AddBlockedField(new Point(6, 5));
+        secondMap.AddBlockedField(new Point(5, 5));
+        secondMap.AddBlockedField(new Point(4, 5));
+        secondMap.AddBlockedField(new Point(5, 4));
+        secondMap.AddBlockedField(new Point(4, 4));
+        secondMap.AddBlockedField(new Point(3, 5));
+        secondMap.AddBlockedField(new Point(2, 5));
+        secondMap.AddBlockedField(new Point(1, 5));
         secondMap.AddBlockedField(new Point(0, 7));
         secondMap.AddBlockedField(new Point(1, 7));
         secondMap.AddBlockedField(new Point(2, 7));
@@ -67,19 +93,24 @@ public static class GameInitialization
         secondMap.AddBlockedField(new Point(4, 7));
         secondMap.AddBlockedField(new Point(5, 7));
         secondMap.AddBlockedField(new Point(6, 7));
+        secondMap.AddBlockedField(new Point(7, 7));
+        secondMap.AddBlockedField(new Point(9, 7));
+        secondMap.AddBlockedField(new Point(9, 8));
+        secondMap.AddBlockedField(new Point(9, 9));
+        secondMap.AddBlockedField(new Point(9, 0));
+        secondMap.AddBlockedField(new Point(9, 1));
 
-        secondMap.AddUnlockedField(new Point(7, 4), 2, "41");
-        secondMap.AddKey(new Point(8, 0), 2);
 
-        secondMap.AddUnlockedField(new Point(7, 8), 3, "11");
-        secondMap.AddKey(new Point(5, 5), 3);
+
+
+
 
         // Dodaj pole teleportacyjne na BigMap
         var teleportToSecond = new TeleportField(new Point(9, 0), "SecondMap", new Point(0, 0));
         teleportToSecond.InitMapAndPosition(bigMap, new Point(9, 0));
 
-        var npc2 = new Npc("RandomGuy", "Weź ten klucz jak chcesz przejść dalej. Hasło to suma kwadratów 4 i 5", 'R');
-        npc2.InitMapAndPosition(secondMap, new Point(9, 0));
+        var npc2 = new Npc("RandomGuy", "Wasi znajomi czekają na was po drugiej stronie tego labiryntu", 'R');
+        npc2.InitMapAndPosition(secondMap, new Point(8, 0));
 
         var filip = new Npc("Filip", "Co wam tak długo zeszło?", 'F');
         filip.InitMapAndPosition(secondMap, new Point(0, 9));
@@ -87,8 +118,8 @@ public static class GameInitialization
         var wiktor = new Npc("Wiktor", "No w końcu jesteście!", 'W');
         wiktor.InitMapAndPosition(secondMap, new Point(1, 9));
 
-        var npc1 = new Npc("RandomGirl", "Aby przejść dalej musicie ", 'r');
-        npc1.InitMapAndPosition(secondMap, new Point(6, 5));
+        var npc1 = new Npc("RandomGirl", "Nie wiem jak zawrócić..", 'r');
+        npc1.InitMapAndPosition(secondMap, new Point(9, 6));
 
         // Dodaj pole teleportacyjne na SecondMap
         var teleportToBig = new TeleportField(new Point(0, 1), "BigMap", new Point(9, 1));

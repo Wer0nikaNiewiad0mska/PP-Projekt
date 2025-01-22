@@ -63,6 +63,8 @@ public class GameSession
         _follower?.FollowPlayer(previousPlayerPosition, _player, _currentMap);
     }
 
+
+
     public void ActivateFollower(Point position)
     {
         if (_follower.TriggerPoint == position)
@@ -113,10 +115,6 @@ public class GameSession
                     symbol = 'P';
                 else if (_currentMap.IsBlocked(new Point(x, y)))
                     symbol = 'X';
-                else if (_currentMap.IsPotion(new Point(x, y)))
-                    symbol = 'O';
-                else if (_currentMap.IsKey(new Point(x, y)))
-                    symbol = 'K';
                 else if (_currentMap.IsTeleport(new Point(x, y)))
                     symbol = 'T';
 
@@ -131,6 +129,31 @@ public class GameSession
         Console.WriteLine("Stan mapy został zresetowany.");
     }
 
+    public void RefreshMapView()
+    {
+        Console.Clear();
+        Console.WriteLine($"Aktualizacja mapy: {_currentMap.GetType().Name}");
+
+        for (int y = _currentMap.SizeY - 1; y >= 0; y--)
+        {
+            for (int x = 0; x < _currentMap.SizeX; x++)
+            {
+                var position = new Point(x, y);
+                var objectsAtPosition = _currentMap.At(position);
+
+                char symbol = objectsAtPosition.Count > 0 ? '.' : ' '; // Domyślny symbol
+
+                if (objectsAtPosition.Contains(Player))
+                    symbol = 'P';
+                else if (objectsAtPosition.OfType<BlockedField>().Any())
+                    symbol = 'X';
+
+                Console.Write(symbol + " ");
+            }
+            Console.WriteLine();
+        }
+    }
+
     public string GetDebugInfo()
     {
         return _player.ToString();
@@ -138,9 +161,6 @@ public class GameSession
 
     public bool IsFollower(Point position) => _follower?.Position == position;
     public bool IsBlocked(Point position) => _currentMap.IsBlocked(position);
-    public bool IsPotion(Point position) => _currentMap.IsPotion(position);
-    public bool IsUnlockable(Point position) => _currentMap.IsUnlockable(position);
-    public bool IsKey(Point position) => _currentMap.IsKey(position);
     public bool IsTeleport(Point position) => _currentMap.At(position).OfType<TeleportField>().Any();
 
     public bool IsTriggerPoint(Point position) => _currentMap.IsTriggerPoint(position);

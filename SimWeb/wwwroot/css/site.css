@@ -115,6 +115,7 @@ footer {
     align-items: center; /* Wyœrodkowanie mapy w pionie */
     justify-content: center; /* Wyœrodkowanie mapy w poziomie */
     padding: 1px;
+    margin-left: 200 px;
     
     border: 10px solid #ddd;
     border-radius: 10px;
@@ -125,7 +126,7 @@ footer {
 
 
     #map-container.bigmap {
-        background-image: url('/img/bigMap.png');
+        background-image: url('/img/image0.png');
         background-size: cover; /* Dopasowanie obrazu do kontenera */
         background-repeat: no-repeat; /* Zapobieganie powtarzaniu obrazu */
         background-position: center;

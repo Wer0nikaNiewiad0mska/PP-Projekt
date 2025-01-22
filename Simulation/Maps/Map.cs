@@ -39,29 +39,60 @@ public abstract class Map
     {
         Console.WriteLine($"Próba usunięcia {mappable.GetType().Name} z pozycji {position}.");
 
-        // Sprawdź, czy istnieją obiekty na danej pozycji
-        if (!_fields.ContainsKey(position))
+        if (_fields.TryGetValue(position, out var objectsAtPosition))
         {
-            Console.WriteLine($"Brak obiektów na pozycji {position}, nic do usunięcia.");
-            return;
-        }
+            if (objectsAtPosition.Remove(mappable))
+            {
+                Console.WriteLine($"{mappable.GetType().Name} został usunięty z pozycji {position}.");
+            }
+            else
+            {
+                Console.WriteLine($"Nie znaleziono {mappable.GetType().Name} na pozycji {position}.");
+            }
 
-        // Usuń konkretny obiekt z listy
-        if (_fields[position].Remove(mappable))
-        {
-            Console.WriteLine($"{mappable.GetType().Name} został usunięty z pozycji {position}.");
+            if (objectsAtPosition.Count == 0)
+            {
+                _fields.Remove(position);
+                Console.WriteLine($"Pozycja {position} jest teraz pusta i została usunięta z mapy.");
+            }
         }
         else
         {
-            Console.WriteLine($"{mappable.GetType().Name} nie znaleziono na pozycji {position}.");
+            Console.WriteLine($"Nie znaleziono obiektów na pozycji {position}.");
+        }
+    }
+
+
+    public bool RemoveFieldAndObjects(IMappable mappable, Point position)
+    {
+        Console.WriteLine($"Próba całkowitego usunięcia {mappable.GetType().Name} z pozycji {position}.");
+
+        if (_fields.TryGetValue(position, out var objectsAtPosition))
+        {
+            // Usuń obiekt z listy na tej pozycji
+            if (objectsAtPosition.Remove(mappable))
+            {
+                Console.WriteLine($"{mappable.GetType().Name} został usunięty z pozycji {position}.");
+            }
+            else
+            {
+                Console.WriteLine($"{mappable.GetType().Name} nie znaleziono na pozycji {position}.");
+            }
+
+            // Jeśli lista jest pusta, usuń pozycję z `_fields`
+            if (objectsAtPosition.Count == 0)
+            {
+                _fields.Remove(position);
+                Console.WriteLine($"Pozycja {position} jest teraz pusta i została usunięta z mapy.");
+            }
+        }
+        else
+        {
+            Console.WriteLine($"Nie znaleziono obiektów na pozycji {position}.");
         }
 
-        // Usuń pustą listę, jeśli brak obiektów na danej pozycji
-        if (_fields[position].Count == 0)
-        {
-            _fields.Remove(position);
-            Console.WriteLine($"Pozycja {position} jest teraz pusta i została usunięta z mapy.");
-        }
+        // Sprawdź, czy obiekt został całkowicie usunięty
+        return !_fields.ContainsKey(position) || !_fields[position].Contains(mappable);
     }
 
     public List<IMappable> At(int x, int y) => At(new Point(x, y));
@@ -100,9 +131,6 @@ public abstract class Map
 
     public abstract bool IsBlocked(Point position);
 
-    public abstract bool IsUnlockable(Point position);
-    public abstract bool IsKey(Point position);
-    public abstract bool IsPotion(Point position);
     public abstract bool IsPlayer(Point position);
     public abstract bool IsNpc(Point position);
     public abstract bool IsTeleport(Point position);
